@@ -32,6 +32,16 @@ const config = {
     locales: ["en"],
   },
 
+  plugins: [
+    [
+      '@docusaurus/plugin-google-gtag',
+      {
+        trackingID: 'G-XSB0TXWK4Y', // 用你的 GA4 ID 替换
+        anonymizeIP: true,
+      },
+    ],
+  ],
+
   presets: [
     [
       "classic",
