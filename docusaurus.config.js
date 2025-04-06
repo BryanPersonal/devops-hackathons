@@ -5,12 +5,12 @@ const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 const organizationName = "BryanPersonal";
-const projectName = "github-pages-docusaurus";
+const projectName = "devops-hackathons";
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "My Site",
-  tagline: "Dinosaurs are cool",
+  title: "Welcome to DevOps-Hackathons",
+  tagline: "Dinosaurs are cool, hackathons are cooler",
   url: `https://${organizationName}.github.io`,
   baseUrl: `/${projectName}/`,
   onBrokenLinks: "throw",
@@ -60,7 +60,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: "My Site",
+        title: "DevOps Site",
         logo: {
           alt: "My Site Logo",
           src: "img/logo.svg",
