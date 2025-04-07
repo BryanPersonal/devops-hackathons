@@ -217,3 +217,11 @@ spec:
 ### Reference - Gardener Openstack Extension Source code or Introduction
 
 https://github.com/gardener/gardener-extension-provider-openstack/blob/master/docs/usage/usage.md#infrastructureconfig
+
+
+:::danger [Known Limitation on openstack provider]
+Limitation on Converged Cloud / SAP Cloud Infrastructure
+:::
+1. Give a project access to the capacity of all clusters within a region.
+https://documentation.global.cloud.sap/docs/customer/getting-started/create-a-project/resource-pooling/
+2. 
