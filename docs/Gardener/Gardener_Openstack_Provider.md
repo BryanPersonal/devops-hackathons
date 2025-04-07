@@ -219,9 +219,9 @@ spec:
 https://github.com/gardener/gardener-extension-provider-openstack/blob/master/docs/usage/usage.md#infrastructureconfig
 
 
-:::danger [Known Limitation on openstack provider]
-Limitation on Converged Cloud / SAP Cloud Infrastructure
+:::danger [Known Limitations]
 :::
 1. Give a project access to the capacity of all clusters within a region.
 https://documentation.global.cloud.sap/docs/customer/getting-started/create-a-project/resource-pooling/
-2. 
+2. Openstack network availability zone must be specified in Terraform before deploying kubernetes resources
+
