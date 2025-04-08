@@ -18,10 +18,10 @@ __! Procedure of certificate management for public domain__:
 
 
 __Gardener Certificates Extension Feature__:
-    - [Supported annotations](https://pages.github.tools.sap/kubernetes/gardener/docs/guides/networking/certificate-extension/#supported-attributes)
-    - 
+- [Supported annotations](https://pages.github.tools.sap/kubernetes/gardener/docs/guides/networking/certificate-extension/#supported-attributes)
+- 
 
-:::danger [Known Cert Limitations]
+:::danger Known Cert Limitations
 :::
 - CN name comply with 64 character limits 
 - Wildcard requests are not supported as of now by the Vendor, according to [SAPNETCAG2+ACME+Guide](https://wiki.one.int.sap/wiki/display/PKI/SAPNETCAG2+ACME+Guide). 

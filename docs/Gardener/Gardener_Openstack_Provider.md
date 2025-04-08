@@ -224,4 +224,4 @@ https://github.com/gardener/gardener-extension-provider-openstack/blob/master/do
 1. Give a project access to the capacity of all clusters within a region.
 https://documentation.global.cloud.sap/docs/customer/getting-started/create-a-project/resource-pooling/
 2. Openstack network availability zone must be specified in Terraform before deploying kubernetes resources
-
+3. Wildcard requests are not supported as of now by vendor, according to [SAPNETCAG2+ACME+Guide](https://wiki.one.int.sap/wiki/display/PKI/SAPNETCAG2+ACME+Guide)
