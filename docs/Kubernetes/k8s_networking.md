@@ -16,4 +16,4 @@ Others:
     - 以太网帧的结构 `| 前导码 | 目标MAC地址 | 源MAC地址 | 类型 | 数据 | FCS |`
 
  #### Picture of container to container communication
-<img src="dockerNetworking.png" alt="dockerNetwork" width="60%">
+ ![dockerNetwork](dockerNetworking.png)
