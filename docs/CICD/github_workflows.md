@@ -1,6 +1,8 @@
 
 ## Hands-on github workflow implementations:
 
+MISC：
+- Workflow built-in [default-environment-variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables)
 
 ### Setup pull request workflow:
 
