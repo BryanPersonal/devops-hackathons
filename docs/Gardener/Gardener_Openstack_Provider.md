@@ -1,6 +1,6 @@
 :::tip Shoot Cluster Manifest Tips
 
-Bibble of running Gardener on topic of SAP Cloud Infrastructure - ConvergedCloud (Gardener Provider: Openstack)
+Shoot Cluster Level Manifest - Bibble of running Gardener on topic of SAP Cloud Infrastructure - ConvergedCloud (Gardener Provider: Openstack)
 :::
 
 High Availability

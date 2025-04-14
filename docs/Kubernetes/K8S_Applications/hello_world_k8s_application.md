@@ -1,9 +1,8 @@
 
 Basic nginx application with openstack designate + nginx-ingress + nginx. 
 
-::: danger
-ingressClassName: `k get ingressclass -A`. Application weburl's IP address = nginx-ingress svc IP address.
-DNS Entry to be created after deploying nginx-ingress helm charts.
+:::danger
+Be careful with A. `ingressClassName` in ingress 2. weburl map nginx-ingress IP 3. DNS Entry as best practice ?? FIXME: what if nginx-ingress helm chart got re-deployed.
 :::
 
 
@@ -24,7 +23,7 @@ nginx-ingress-ingress-nginx-controller             LoadBalancer   100.104.110.49
 nginx-ingress-ingress-nginx-controller-admission   ClusterIP      100.104.108.168   <none>         443/TCP                      17h
 ```
 
-::: Tips
+:::tip
 ACME (Automatic Certificate Management Environemnt) is being covered by the following Ingress resource.
 Extension Must be enabled from Gardener shoot cluster's manifest 
 :::
