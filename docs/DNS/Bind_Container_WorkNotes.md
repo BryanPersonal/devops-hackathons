@@ -1,6 +1,8 @@
 
 
+#### Test bind basic feature
 
+### Single zone transferin default view
 
 Drop zone file to dyn
 ```
@@ -215,6 +217,8 @@ zone "example.com" {
 
 ```
 
+example.com.zone content
+```
 sh-5.2# cat /var/lib/named/dyn/example.com.zone
 $TTL 86400      ; 1 day
 example.com.            IN SOA  ns1.example.com. admin.example.com. (
@@ -228,4 +232,60 @@ example.com.            IN SOA  ns1.example.com. admin.example.com. (
 ns1.example.com.        A       192.168.1.1
 $TTL 3600       ; 1 hour
 test1.example.com.      A       11.0.0.1
+```
+Tips:
+
+- Avoid using rndc-key 来zone transfer, 仅用于控制 BIND 服务。建议使用独立的 TSIG 密钥来进行动态更新和区域传输。
+
+
+#### Issue Collection
+
+1. rndc broken due to rndc key got changed unexpectedly
+
+DESC: In container environment, /etc/rndc.key 被意外 `rndc-confgen -a` 更改导致了rndc broken.
+
+```
+sh-5.2# rndc status
+WARNING: key file (/etc/rndc.key) exists, but using default configuration file (/etc/rndc.conf)
+rndc: connection to remote host closed.
+* This may indicate that the
+* remote server is using an older
+* version of the command protocol,
+* this host is not authorized to connect,
+* the clocks are not synchronized,
+* the key signing algorithm is incorrect
+* or the key is invalid.
+```
+
+Solution: `kill -HUP 1`
+
+给 BIND 的主进程 named 发送一个 SIGHUP 信号，让它重新加载配置文件，而不是终止它, 这个跟 rndc reload 效果类似，但 rndc 更高级、可控更多（如 reload 某一个 zone 而不是全部）
+并不是所有服务收到 SIGHUP 都能正确 reload，有些需要用专属命令（如 nginx -s reload）
+如果 PID 1 是 init 或 systemd（在完整 Linux 中），给它发 SIGHUP 可能没效果，甚至会引起意外行为。但在容器中，通常 PID 1 是你运行的目标服务（比如 named）
+
+More explanation on HUP=SIGHUP : man 7 signal
+⭐ 虽然 SIGHUP 最初的意义是“终端挂起”，但现在许多守护进程（daemon）把它当成一种“重新加载配置”的信号。
+
+比如：
+- named：收到 SIGHUP 会重新加载配置和 zone 文件
+- nginx：收到 SIGHUP 会重新加载配置
+- sshd：收到 SIGHUP 会重新读取配置并重启服务
+
+Sample `/etc/rndc.conf`. 标准配置无需单独写
+```
+key "rndc-key" {
+        algorithm hmac-sha512;
+        secret "7e7uVVw88c5z+zFpmEED9Jl6tr/TnLagBaLA2v5YewSRFQwBZ6KLpK3nKdhgVnoUfyQmjp7grtFwaI+rMHxihA==";
+};
+options {
+    default-key "rndc-key";
+    default-server 127.0.0.1;
+    default-port 953;
+};
+```
+
+2. 开启view功能后 dig @127.0.0.1 zone 失败
+
+```
+16-Apr-2025 16:50:44.971 client @0x7f830d4cac00 172.17.0.2#60230: view any: received notify for zone 'int.example.com': NOTAUTH
 ```

@@ -21,7 +21,26 @@ Conceptional understanding:
     - `master`：静态主区域文件，属主为 root
     - `slave`：从区域文件，属主为 named
 
+- ❌ 高危配置：rndc-key 通常用于控制 BIND 服务，而非动态更新（建议使用独立的 TSIG 密钥）
+
+- zone transfer 
+    - pre-requisite (network tcp/udp 53 port)
+    - zone transfer method 
+        - AXFR/IXFR
+        - notify 
+    - zone transfer security 
+        - TSIG
+        - GSS-TSIG
+    - zone transfer configuration 
+        - allow-transfer
+        - allow-notify
+        - masters/slaves
+
 - 热加载 rndc reload VS rndc reconfig ??
+- rndc retransfer 强制slave忽略SOA serial号，强制从主服务器重新传输区域数据
+- rndc sync -clean 强制清除所有临时文件
+- _default.nzf 是BIND 实现动态Zone管理的核心文件
+- 只有在 BIND 的配置中显式声明 allow-new-zones yes; 后，才能通过 rndc addzone 动态添加或删除 Zone
 
 tmp--> 
 BIND 的其他临时文件类型
