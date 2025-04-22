@@ -109,3 +109,22 @@ https://operations.global.cloud.sap/docs/operation/network/bgpvpn_troubleshootin
 
 
 ```
+
+
+#### CLMAM CIS BPGVPN Design 
+
+From CIS BPGVPN gmp-eu-de-1-cis-spc-tic's Access Control. Add Policy "access as shared" to the following projects (as Target projects). 
+Then the BGPVPN will present as the shared BGPVPN in those projects ??
+
+Project ID: bf8e3ed5c8b04050bc166e5921c815b0  EUDE1 Tools
+Project ID: d920405ed060493dacf0c221408e377b  EUDE1 Prod
+
+From OADEV, you must add new project ID as target project ID also.
+
+
+#### HOWTO: configure router to use external network
+```
+openstack router set --external-gateway <external network ID> <Shoot-router-ID> 
+
+e.g. openstack router set --external-gateway ea58efde-05fd-449a-8e5c-4910ca27ef50 686dbec1-bddd-4d89-9edb-1380d2a47779 
+```

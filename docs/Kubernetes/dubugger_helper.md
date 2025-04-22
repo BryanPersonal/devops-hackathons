@@ -34,3 +34,9 @@ spec:
 ```
 
 2. Launch a net-utils troubleshoot pod
+```
+kubectl run curl --image=appropriate/curl -it --rm -- sh
+
+## check NIC name / ip addr
+kubectl debug node/shoot--sn1--sit-081-test-sitworker-j90ic-z1-69548-98j2w -it --image=busybox -- chroot /host
+```

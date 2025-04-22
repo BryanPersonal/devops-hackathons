@@ -14,7 +14,7 @@ https://documentation.suse.com/sles/15-SP6/html/SLES-all/book-rmt.html
 
 Discussion: https://github.com/SUSE/bci/discussions
 
-Conceptional understanding:
+#### Conceptional understanding:
 - .jnl 文件是 BIND 用于 事务日志（Journal File） 的特定机制
 -  bind主数据目录以及子目录解释
     - `dyn`：动态区域文件，属主为 named
@@ -41,7 +41,11 @@ Conceptional understanding:
 - rndc sync -clean 强制清除所有临时文件
 - _default.nzf 是BIND 实现动态Zone管理的核心文件
 - 只有在 BIND 的配置中显式声明 allow-new-zones yes; 后，才能通过 rndc addzone 动态添加或删除 Zone
-
+- `view any`视图匹配所有客户端：通过 match-clients { any; }; 匹配所有未被其他视图覆盖的客户端请，可将  zone "." zone "localhost" 和 zone "0.0.127.in-addr.arpa" 放在`any` 视图中
+    - 仅递归服务需要 根区域 `(.)`, 提供根DNS服务器列表(named.root), 用于递归查询。 权威服务器通常不需要
+    - localhost 区域 解析 localhost 到 127.0.0.1，用于本地服务通信。
+    - 0.0.127.in-addr.arpa 区域反向解析 127.0.0.1，用于本地日志或工具验证。
+- testtest
 tmp--> 
 BIND 的其他临时文件类型
 除 .jnl 文件外，BIND 还可能生成其他类型的临时文件，具体取决于配置和使用场景：

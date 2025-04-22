@@ -178,6 +178,8 @@ zone "example.com" IN {
 };
 
 Bind slave server's named.conf
+```
+
 
 ```
 sh-5.2#  grep -vE '^\s*#|^\s*$' /etc/named.conf
@@ -289,3 +291,4 @@ options {
 ```
 16-Apr-2025 16:50:44.971 client @0x7f830d4cac00 172.17.0.2#60230: view any: received notify for zone 'int.example.com': NOTAUTH
 ```
+Solution: try validating slave zone file location. 
