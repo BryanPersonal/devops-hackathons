@@ -39,6 +39,4 @@ cc02v011705	Used for VLAB CVS (CI) -CAM 2.0
 cc02v011706	Used for VLAB CVS (CS) -CAM 2.0
 cc02v011704	Used for VLAB CVS (DB) -CAM 2.0
 
-wget http://repo:50000/repo/CC+1/i577081/SP6_RT_Checker_TLO.sh --output-document=/tmp/SP6_RT_Checker_TLO.sh && && bash /tmp/SP6_RT_Checker_TLO.sh && rm /tmp/SP6_RT_Checker_TLO.sh
-
 Control plane Stability: 查看api-server stability 尤其是使用了openstack-designate 

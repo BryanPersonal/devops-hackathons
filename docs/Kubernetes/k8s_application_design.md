@@ -28,8 +28,11 @@
 
 兼容container的特性，摆脱systemd logger.
 bind在哪里切换workdir？From / to `/var/lib/named` `named.conf`
-::: danger
+
+:::danger Question
+
 如何让日志打到docker或容器内?
+
 :::
 核心原则: 日志输出到stdout/stderr __应用不能把日志写到文件里__（如 /var/log/named.log)
 
