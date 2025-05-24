@@ -51,5 +51,18 @@ Bash execution best practice:
 wget http://repo:50000/repo/CC+1/i577081/SP6_RT_Checker_TLO.sh --output-document=/tmp/SP6_RT_Checker_TLO.sh && && bash /tmp/SP6_RT_Checker_TLO.sh && rm /tmp/SP6_RT_Checker_TLO.sh
 ```
 
+Same tip for grep
+```
+grep --color=always -ir res_pool_folder additional-attributes/*sles15sp5* | sed 's/:/|/' | column -s '|' -t
+
+s<delimiter>pattern<delimiter>replacement<delimiter>
+默认的 <delimiter> 是 /，所以 / 才需要在某些情况下被“转义”。
+sed 's/\/usr\/bin/\/usr\/local\/bin/'
+sed 's|/usr/bin|/usr/local/bin|' 这里你可以把 / 改成 | 作为分隔符（完全合法，甚至更常用），是 sed 的一个特性
+
+
+```
+
 __MISC knowledges:__
 - `chmod 1775` mydir, 1 refer sticky bit 当设置在目录上时，只有文件的所有者、目录的所有者或 root 才能删除或重命名该目录中的文件，即使其他人也有写权限。
+-  通过`if test -f "/proc/$i/exe"` 来判断进程是否存在是一个经典又可靠的Linux技巧 `/proc/$PID/exe` 在进程退出时会立即消失，因此更准确地反映进程是否"还活着" 并且可执行。

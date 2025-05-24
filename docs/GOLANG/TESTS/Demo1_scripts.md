@@ -24,7 +24,7 @@ func sayHello(name string) (msgPrinted bool, err error) {
         fmt.Println("Error creating file:", err)
         return
     }
-    defer f.Close()
+    defer f.Close()  // CLOSE FileDescriptor 确保在函数退出时关闭打开的资源，比如文件、HTTP响应、数据库连接等。
 
     _, err = f.WriteString(msg + "\n")
     if err != nil {
