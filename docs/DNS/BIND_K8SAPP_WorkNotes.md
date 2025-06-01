@@ -13,7 +13,7 @@
 实践：
 1. Target 在负载均衡前一层使用HAProxy + 漂移IP （Virtual IP） 构建类似keepalived的OpenStack高可用前置层：
 
-
+```
        ┌────────────┐
        │   Client   │
        └────┬───────┘ 
@@ -55,6 +55,8 @@
              ▲                             ▲
              |                             |
              └────────── VIP failover ─────┘
+
+```
 
 客户端请求 --> HAProxy (100.70.224.11:53) --> 转发给 backend（如运行 BIND 的 Pod）
 

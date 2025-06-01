@@ -158,6 +158,17 @@ func main() {
 }
 
 ```
+ - fmt.Println(p4)     // 打印结构体指针的值，如：&{Ann 30}
+ - fmt.Println(*p4)    // 解引用，打印结构体内容：{Ann 30}
+ - fmt.Println(&p4)    // 打印的是 p4 的地址，即 **Person
+
+| 方式                       | 类型        | 是否实例化 | 备注           |
+| ------------------------ | --------- | ----- | ------------ |
+| `p := new(Person)`       | `*Person` | ✅ 是   | 零值结构体，返回指针   |
+| `p := Person{}`          | `Person`  | ✅ 是   | 零值结构体，返回值    |
+| `p := &Person{Name:...}` | `*Person` | ✅ 是   | 同时初始化字段，推荐方式 |
+
+
 
 Sample `type A interface {}` 实现
 ```
@@ -255,13 +266,64 @@ New 和 Make的区别是什么
 
 ```
 
- - fmt.Println(p4)     // 打印结构体指针的值，如：&{Ann 30}
- - fmt.Println(*p4)    // 解引用，打印结构体内容：{Ann 30}
- - fmt.Println(&p4)    // 打印的是 p4 的地址，即 **Person
+```
+func loadConfig(data []byte) (*Config, error) {
+	var cfg Config
+	err := yaml.Unmarshal(data, &cfg)
+	return &cfg, err
+}
 
-| 方式                       | 类型        | 是否实例化 | 备注           |
-| ------------------------ | --------- | ----- | ------------ |
-| `p := new(Person)`       | `*Person` | ✅ 是   | 零值结构体，返回指针   |
-| `p := Person{}`          | `Person`  | ✅ 是   | 零值结构体，返回值    |
-| `p := &Person{Name:...}` | `*Person` | ✅ 是   | 同时初始化字段，推荐方式 |
+cfg, error := loadConfig(data)
+fmt.Printf("解析成功，配置内容: %+v\n", config)  // %+v fnt.Printf支持格式化字符串（比如 %s, %d, %+v 等）。
 
+// 参数 data []byte：表示传入的配置数据是一个字节数组（一般是读取自文件的内容）。
+// *Config 表示返回的是 Config 类型的 指针；
+// &cfg 表示将变量 cfg 的地址（即指针）返回
+```
+
+✅ fmt.Printf 常用格式化符号一览
+| 占位符   | 类型/含义            | 示例值                  | 输出结果示例                        |
+| ----- | ---------------- | -------------------- | ----------------------------- |
+| `%v`  | 原始值（默认格式）        | `42`, `"hi"`         | `42`, `hi`                    |
+| `%+v` | 结构体字段 + 值        | `struct{Name: "Go"}` | `{Name:Go}`                   |
+| `%#v` | Go 语法格式输出（带类型信息） | `42`                 | `42`；`main.Config{Name:"Go"}` |
+| `%T`  | 类型               | `42`                 | `int`                         |
+| `%%`  | 字面上的 `%` 符号      | 无                    | `%`                           |
+
+```golang
+
+[i577081@ACSPHL012888 Golang]$ go doc github.com/hashicorp/vault/api.DefaultConfig 
+package api // import "github.com/hashicorp/vault/api"
+
+func DefaultConfig() *Config
+    DefaultConfig returns a default configuration for the client. It is safe to
+    modify the return value of this function.
+
+    The default Address is https://127.0.0.1:8200, but this can be overridden by
+    setting the `VAULT_ADDR` environment variable.
+
+    If an error is encountered, the Error field on the returned *Config will be
+    populated with the specific error.
+
+// 如何查看返回这个函数返回的 *Config    go doc github.com/hashicorp/vault/api.config
+// 你怎么知道在api下
+// DefaultConfig() 是 api 包的函数
+// 它返回的是当前包里的 *Config 类型
+// 如果是别的包，例如 vault.Config，它会显式写出：*vault.Config
+
+```
+
+go mod init vault-client-go  go mod tidy  和 go.mod 都是什么作用
+
+```text
+模块相关的核心文件和命令包括：
+
+go.mod: 模块的配置清单文件（你项目的“身份证”）
+类似
+- Python 的 requirements.txt
+- Node.js 的 package.json
+
+go.sum: 模块依赖的校验和（保证下载内容一致）
+
+go mod init, go mod tidy: 管理模块用的命令
+```
