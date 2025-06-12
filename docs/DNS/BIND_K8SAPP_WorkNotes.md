@@ -60,12 +60,13 @@
 
 客户端请求 --> HAProxy (100.70.224.11:53) --> 转发给 backend（如运行 BIND 的 Pod）
 
+```
                 +---------------------------------------------+
                 |                                             |
 TCP请求 53 ---> | frontend dns_write_tcp  (mode tcp)         | --> bind_backend_tcp
 UDP请求 53 ---> | frontend dns_write_udp  (mode udp)         | --> bind_backend_udp
                 |                                             |
                 +---------------------------------------------+
-
+```
 
 你问得非常关键 —— “只有拥有 VIP 的 HAProxy 能接收请求” 是靠 VIP 本身的 IP 绑定行为 和 HAProxy 的 监听地址配置 来实现的，不是靠业务逻辑代码，而是靠网络层的绑定行为（bind）

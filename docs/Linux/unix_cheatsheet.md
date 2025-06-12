@@ -13,6 +13,16 @@ grep -vE '^\s*#|^\s*$' /etc/named.conf
 \s*：匹配 0 个或多个空白字符
 ^\s*#：匹配前面可能有空格的注释行
 ^\s*$：匹配空白行
+
+
+cc01v011976:/tmp # rpm -qa |awk '/sssd/ && /TEST/'
+sssd-ldap-2.9.3-150600.3.18.3.29856.1.TEST.1243385.x86_64
+sssd-krb5-common-2.9.3-150600.3.18.3.29856.1.TEST.1243385.x86_64
+sssd-krb5-2.9.3-150600.3.18.3.29856.1.TEST.1243385.x86_64
+sssd-2.9.3-150600.3.18.3.29856.1.TEST.1243385.x86_64
+- 只匹配同时包含 "sssd" 和 "TEST" 的行（逻辑与操作）。
+- /pattern/ 是正则匹配语法
+
 ```
 
 #### add lines `+:CLMAM_CC_OSAccess_prod:ALL` on topc of `+:CLMAM_CC_OSAccess_CAM_prod:ALL` when it doesn't exist. 

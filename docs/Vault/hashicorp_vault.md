@@ -80,8 +80,8 @@ vault write auth/approle/role/<role_name> \
     WARN[0000]log.go:244 gosnowflake.(*defaultLogger).Warn DBUS_SESSION_BUS_ADDRESS envvar looks to be not set, this can lead to runaway dbus-daemon processes. To avoid this, set envvar DBUS_SESSION_BUS_ADDRESS=$XDG_RUNTIME_DIR/bus (if it exists) or DBUS_SESSION_BUS_ADDRESS=/dev/null.
     Key                   Value
     ---                   -----
-    secret_id             f362194a-9a97-8a50-d955-862861e9d2b9
-    secret_id_accessor    861d31db-b10b-7a85-4ca0-4c20570af10a
+    ret_id             f362194a-9a97-8a50-d955-862861e9d2b9
+    ret_id_accessor    861d31db-b10b-7a85-4ca0-4c20570af10a
     secret_id_num_uses    0
     secret_id_ttl         0s
     #########

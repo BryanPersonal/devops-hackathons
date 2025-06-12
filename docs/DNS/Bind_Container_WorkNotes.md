@@ -284,7 +284,7 @@ Sample `/etc/rndc.conf`. 标准配置无需单独写
 ```
 key "rndc-key" {
         algorithm hmac-sha512;
-        secret "7e7uVVw88c5z+zFpmEED9Jl6tr/TnLagBaLA2v5YewSRFQwBZ6KLpK3nKdhgVnoUfyQmjp7grtFwaI+rMHxihA==";
+        sec "7e7uVVw88c5z+zFpmEED9Jl6tr/TnLagBaLA2v5YewSRFQwBZ6KLpK3nKdhgVnoUfyQmjp7grtFwaI+rMHxihA==";
 };
 options {
     default-key "rndc-key";

@@ -128,3 +128,6 @@ openstack router set --external-gateway <external network ID> <Shoot-router-ID>
 
 e.g. openstack router set --external-gateway ea58efde-05fd-449a-8e5c-4910ca27ef50 686dbec1-bddd-4d89-9edb-1380d2a47779 
 ```
+
+##### Share bgpvpn 
+openstack network rbac create --type router --target-project <other-project-id> --action access_as_shared <router-id>
