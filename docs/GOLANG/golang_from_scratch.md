@@ -13,15 +13,17 @@ Go没有面向对象中的类，但可以为任意type (包括struct) 定义方�
 
 
 
-`[]byte` 就是一个“字节切片”（slice of bytes), 它是 Go 中用来表示 二进制数据或原始数据流 的标准类型。每个 byte 是一个 8 位无符号整数（等于 uint8），范围从 0 到 255。
-```
+`[]byte` 就是一个"字节切片" slice of bytes, 它是 Go 中用来表示 二进制数据或原始数据流 的标准类型。
+每个 byte 是一个 8 位无符号整数（等于 uint8），范围从 0 到 255。
+
+
 | 用途                    | 示例                            |
 | --------------------- | ----------------------------- |
 | 读写文件数据                | `os.ReadFile()` 返回 `[]byte`   |
 | 网络通信                  | `net.Conn.Read()` 使用 `[]byte` |
 | 字符串与 JSON、Base64 的转换等 | `json.Marshal()` 返回 `[]byte`  |
 | 数据加密 / 解密             | 加密算法操作的原始数据                   |
-```
+
 
 `body, err := io.ReadAll(resp.Body)`
 这个函数会把 `resp.Body`（它实现了 io.Reader 接口）中的所有数据一次性读到内存里，并返回一个 `[]byte` 类型的变量（这里是 body）。
@@ -329,4 +331,20 @@ go.mod: 模块的配置清单文件（你项目的“身份证”）
 go.sum: 模块依赖的校验和（保证下载内容一致）
 
 go mod init, go mod tidy: 管理模块用的命令
+```
+
+匿名函数 
+```
+(func(m string) { ... })(msg)
+
+
+
+msg := "Hello" 
+func printMsg(m string) {
+    fmt.Println(m)
+}{msg}
+go printMsg(msg)
+
+
+
 ```
