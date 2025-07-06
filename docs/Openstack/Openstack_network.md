@@ -70,7 +70,7 @@ I577081 @ eu-nl-1 > monsoon3 > SI_DevOps > openstack network show 4d14d9a8-ff1f-
 +---------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 # network rbac cleanup
-openstack network rbac delete 54565f71-a824-49e1-9935-975e80a839f9
+`openstack network rbac delete 54565f71-a824-49e1-9935-975e80a839f9`
 ```
 
 
@@ -130,4 +130,4 @@ e.g. openstack router set --external-gateway ea58efde-05fd-449a-8e5c-4910ca27ef5
 ```
 
 ##### Share bgpvpn 
-openstack network rbac create --type router --target-project <other-project-id> --action access_as_shared <router-id>
+`openstack network rbac create --type router --target-project <other-project-id> --action access_as_shared <router-id>`
