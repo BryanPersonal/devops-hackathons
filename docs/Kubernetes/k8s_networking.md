@@ -20,4 +20,13 @@ Others:
 
 #### Pic of Pod to Pod communication
 
-#### Pic of Pod to Pod communication
+#### Kube-proxy
+
+
+
+```
+shoot--sni--turing-worker-default-z1-76bb9-4848c:/ # iptables -t nat -L -n -v --line-numbers |grep KUBE-SVC-UWGJCTU7452JZ2VX
+1       16  1312 KUBE-SVC-UWGJCTU7452JZ2VX  all  --  *      *       100.104.0.0/18       0.0.0.0/0            /* pod traffic for bind-test/bind-master-lb:dns-udp external destinations */
+3        0     0 KUBE-SVC-UWGJCTU7452JZ2VX  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* route LOCAL traffic for bind-test/bind-master-lb:dns-udp external destinations */ ADDRTYPE match src-type LOCAL
+16       0     0 KUBE-SVC-UWGJCTU7452JZ2VX  udp  --  *      *       0.0.0.0/0            100.104.73.144       /* bind-test/bind-master-lb:dns-udp cluster IP */ udp dpt:53
+```

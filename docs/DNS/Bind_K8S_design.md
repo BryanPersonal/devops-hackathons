@@ -237,3 +237,13 @@ data:
 
 精度低：靠 shell 轮询 kubectl 判断时序，存在延迟。
 
+
+
+### Logging design
+
+Two parts:
+- Container Logs: stdout/stderr
+- Application Logs: 
+
+1. use `exec <main process start>` to elevate the process to PID 1 
+2. 

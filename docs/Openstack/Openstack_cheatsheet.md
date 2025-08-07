@@ -22,6 +22,15 @@ openstack security group show default_SG_clmam-eu-de-2-vlab | grep '10.180.12.0'
 
 ```
 
+#### Ceph
+
+```
+pip install swift (under venv)
+
+swift --os-service-type object-store-ceph upload 3rd-party-package-maintenance ./filebeat-9.0.2-x86_64.rpm --object-name repo/3rdparty/SI-DevOps/testing/SLES15/manual/filebeat-9.0.2-x86_64.rpm
+Warning: failed to create container '3rd-party-package-maintenance': 409 Conflict: BucketAlreadyExists
+repo/3rdparty/SI-DevOps/testing/SLES15/manual/filebeat-9.0.2-x86_64.rpm
+```
 
 #### openstack neutron port operations
 
