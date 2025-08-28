@@ -32,5 +32,5 @@ TO-DO: remove IPv6 listen
 
 forwarder testing pod.
 ```
-k run podtest-forwarder --image=cytopia/bind --env="DNS_FORWARDER=100.104.88.66"
+k run podtest-forwarder --image=cytopia/bind --env="DNS_FORWARDER=100.114.88.213"
 ```
