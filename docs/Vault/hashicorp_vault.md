@@ -21,6 +21,12 @@ Hashicorp Vault中的认证方法
 - Vault-Secret-Operator (K8S)
 
 
+#### Access Token from K8S Pod
+
+```
+
+```
+
 
 
 #### Cheatsheet

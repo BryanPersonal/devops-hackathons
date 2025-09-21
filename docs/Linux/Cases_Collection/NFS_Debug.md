@@ -5,6 +5,35 @@
 On a VM, an example could be: `tcpdump -n -s 0 -i eth0 -w /tmp/${HOSTNAME}.pcap host <IP of vfiler>` 
 `date +%T:%N; df -h`
 
+
+From SUSE Case - https://scc.suse.com/support/cases/01590773
+```
+So, for the issue during vmotion, we do not have any data except sar. 
+ 
+We would need tcpdump with nfs debug(rpcdebug -m rpc -s all; rpcdebug -m nfs -s all) captured during vmotion.
+ 
+Please check if nfs debug is enabled:
+# zcat /proc/config.gz | grep NFS_DEBUG
+ 
+Should return 
+CONFIG_NFS_DEBUG=y
+ 
+Set:
+# rpcdebug -v -m rpc -s all
+# rpcdebug -v -m nfs -s all
+ 
+Start tcpdump and initiate a vmotion. After that send the tcpdump as well as a new supportconifg and /var/log
+ 
+Unset rpcdebug
+# rpcdebug -v -m rpc -c all
+# rpcdebug -v -m nfs -c all
+ 
+ 
+For the df hang engineering did not spot anything in the available pcap file that would indicate an issue. Possibly the tcpdump was started after df was hanging, as there are not even retransmitted  packets. 
+ 
+Can you do a test with another vmotion with tcpdump+rpcdebug? If the issue is reproduced, we then have the logs and traces for analysis.
+```
+
 `ss -tin | grep 2049` → 看 Send-Q 是否长期接近上限。
 
 `/proc/sys/net/ipv4/tcp_wmem` → 确认 buffer 大小。

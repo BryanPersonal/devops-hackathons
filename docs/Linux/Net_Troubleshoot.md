@@ -9,7 +9,7 @@ DEST:
 sudo tcpdump -i any host 100.81.53.245 and port 30013 -nn -vv -s 0 -w hana30013.pcap
 
 
-HOW TO READ： 
+HOW TO READ: 
 tcpdump -nn -r capture.pcap | less
 
 | 字段/符号       | 含义                   |

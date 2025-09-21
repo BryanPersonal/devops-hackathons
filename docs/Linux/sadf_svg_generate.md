@@ -3,14 +3,14 @@ This is for RCA
 ```
 #!/bin/bash
 # 用法: ./gen_sadf_svgs.sh sa_file start_time end_time output_dir
-# 示例: ./gen_sadf_svgs.sh sa20250819 19:20:00 19:36:00 /tmp/$(uname -n)_svgs
+# 示例: ./gen_sadf_svgs.sh sa20250916 00:00:00 24:00:00 /tmp
 
 SA_FILE=$1
 START_TIME=$2
 END_TIME=$3
 OUTDIR=$4
 
-mkdir -p "$OUTDIR" && chmod 755 "$OUTDIR"
+mkdir -p "$OUTDIR/$(uname -n)_svgs" && chmod 755 "$OUTDIR"
 
 # 定义指标数组 (sar 参数 : 输出文件名)
 declare -A charts=(
@@ -27,14 +27,14 @@ declare -A charts=(
   ["-q"]="sysload.svg"                # 系统负载
 )
 
-for key in "${!charts[@]}"; do
-  outfile="$OUTDIR/$(basename $SA_FILE .sar)_$(uname -n)_${charts[$key]}"
+for key in "${!/tmp/mem[@]}"; do
+  outfile="$OUTDIR/$(uname -n)_svgs/$(uname -n)_${charts[$key]}"
   echo "生成: $outfile"
   sadf -g "$SA_FILE" -s "$START_TIME" -e "$END_TIME" -- $key > "$outfile"
-  chmod 755 $outfile
+  chmod -r 755 $OUTDIR/$(uname -n)_svgs/*
 done
 
 
 
-echo "✅ 所有图表已生成到目录: $OUTDIR"
+echo "✅ 所有图表已生成到目录: $OUTDIR/$(uname -n)_svgs"
 ```

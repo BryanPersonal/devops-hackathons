@@ -9,8 +9,9 @@
 Placeholder - Gardener DNS Extensions
 
 
-Enable custom Landscape DNS by enabling `node-local-dns`
-https://jira.tools.sap/browse/SIDEVOPS-14841
+Enable custom Landscape DNS by enabling `node-local-dns`<br>
+POC ticket:https://jira.tools.sap/browse/SIDEVOPS-14841
+Massive rollout ticket: https://jira.tools.sap/browse/SIDEVOPS-15059
 https://convergedcloud.slack.com/archives/C9CEBQPGE/p1754053063924389 
 https://pages.github.tools.sap/kubernetes/gardener/docs/landscapes/live/gardener/networking/custom-dns-config/
 https://gardener.cloud/docs/gardener/networking/custom-dns-config/#node-local-dns

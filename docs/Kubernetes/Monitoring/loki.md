@@ -16,3 +16,8 @@ envFrom:
 
 helm pull grafana/loki-stack --version 2.10.2 --untar
 ```
+
+
+Concepts:
+ - Ingester = Loki 的写入器，负责接收日志、切分 chunk、写入存储、并在哈希环中保证副本和容错。
+ - 

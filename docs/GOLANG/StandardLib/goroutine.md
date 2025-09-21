@@ -45,3 +45,39 @@ worker goroutine:   [run]   [run]   [run]   →  Done() --┘
 ```
 
 
+
+```
+import (
+    "fmt"
+    "sync"
+    "time"
+    "runtime"
+)
+
+func main() {
+    stop := make(chan struct{})
+    var wg sync.WaitGroup
+
+    wg.Add(1)
+    go func() {
+        defer wg.Done()
+
+        ticker := time.NewTicker(time.Second)
+        defer ticker.Stop()
+
+        for {
+            select {
+            case <-ticker.C:
+                fmt.Println("working...")
+            case <-stop:
+                fmt.Println("stopped")
+                return
+            }
+        }
+    }()
+    fmt.Println("goroutines:", runtime.NumGoroutine())
+    time.Sleep(3 * time.Second)
+    close(stop) // 广播停止信号
+    wg.Wait()   // 等待 goroutine 完成，确保看到 "stopped"
+}
+```

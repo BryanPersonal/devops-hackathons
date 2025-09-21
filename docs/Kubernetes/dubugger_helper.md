@@ -55,7 +55,7 @@ kubectl run debug-node \
   --privileged=true \
   --image=cia-docker-live.int.repositories.cloud.sap/sidevops-debugging:2.0.2 \
   --stdin \
-  --env="PS1=\[\e[31m\]shoot--sni--turing-worker-default-z1-9756c-jmgzc\$ \[\e[0m\]" \
+  --env="PS1=\[\e[31m\]shoot--sn1--sit081-sitworker-f20z5-z1-74b9c-6q5sw\$ \[\e[0m\]" \
   --tty \
   --attach \
   --overrides='
@@ -66,7 +66,7 @@ kubectl run debug-node \
     "hostNetwork": true,
     "hostPID": true,
     "nodeSelector": {
-      "kubernetes.io/hostname": "shoot--sni--turing-worker-default-z1-9756c-jmgzc"
+      "kubernetes.io/hostname": "shoot--sn1--sit081-sitworker-f20z5-z1-74b9c-6q5sw"
     },
     "restartPolicy": "Never"
   }

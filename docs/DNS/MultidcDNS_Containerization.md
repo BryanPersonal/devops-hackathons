@@ -13,6 +13,16 @@ apk install bind-tools
 > send
 > EOF
 / # dig @100.114.88.204 ttest.dyn.example.com
+
+
+
+cat <<EOF > /etc/bind/sapcp.key
+// TSIG sapcp key for BTP PSA Multidc secure dynamic update
+key "sapcp-key" {
+    algorithm hmac-sha256;
+    secret "64x88jYklWnCuU/JOrIoz58Fy+sYrILJGBlObvB/16E="; // Use dnssec-keygen 
+};
+EOF
 ```
 
 

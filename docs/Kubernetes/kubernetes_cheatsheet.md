@@ -54,7 +54,9 @@ kubectl get roles/clusterroles/rolebindings/clusterrolebindings
 
 kubectl describe clusterrole view
 
+# Drain the node when one of nodes is unhealthy
 
+kubectl drain shoot--sn1--sit081-sitworker-vd9yy-z1-5f6bd-ct6bp --ignore-daemonsets --delete-emptydir-data
 
 
 # Label pods

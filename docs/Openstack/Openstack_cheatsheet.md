@@ -15,6 +15,21 @@ cc01v011743 hana_c192_m2917
 ```
 
 
+// Glance /Image one-one match 
+```
+echo "Object,UUID,ImageName,Status"
+for obj in $(swift list | grep '^glance_'); do
+  uuid=${obj#glance_}
+  image=$(openstack image show $uuid -f value -c name 2>/dev/null)
+  if [ -n "$image" ]; then
+    echo "$obj,$uuid,$image"
+  else
+    echo "$obj,$uuid,NOT_FOUND"
+  fi
+done
+
+```
+
 
 
 ```
@@ -56,7 +71,7 @@ openstack group/user list / openstack group/user show
 
 # Create Openstack application credential / zypper in python3-openstackclient / source download openrc file 
 
-openstack application credential create <CredentialName> <roles> | --role compute_admin --role sharedfilesystem_admin --role registry_admin --role securitygroup_admin --role network_admin --role image_admin --role volume_admin
+openstack application    create <CredentialName> <roles> | --role compute_admin --role sharedfilesystem_admin --role registry_admin --role securitygroup_admin --role network_admin --role image_admin --role volume_admin
 
 
 # check Openstack session persistence 
