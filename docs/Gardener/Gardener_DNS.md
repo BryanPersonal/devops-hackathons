@@ -8,7 +8,7 @@
 
 Placeholder - Gardener DNS Extensions
 
-
+```
 Enable custom Landscape DNS by enabling `node-local-dns`<br>
 POC ticket:https://jira.tools.sap/browse/SIDEVOPS-14841
 Massive rollout ticket: https://jira.tools.sap/browse/SIDEVOPS-15059
@@ -17,9 +17,8 @@ https://pages.github.tools.sap/kubernetes/gardener/docs/landscapes/live/gardener
 https://gardener.cloud/docs/gardener/networking/custom-dns-config/#node-local-dns
 
 Implementation of customizing coreDNS's resolution chain.
-
 Slack message: https://convergedcloud.slack.com/archives/C9CEBQPGE/p1754062993739349?thread_ts=1754053063.924389&cid=C9CEBQPGE
-
+```
 
 1. Customize CoreDNS Forwarding :gear:
 You can override the default DNS forwarding behavior of CoreDNS by editing a special ConfigMap called coredns-custom in the kube-system namespace. You'll need to add a corefile.override key that reconfigures the forward plugin.
