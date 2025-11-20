@@ -18,11 +18,6 @@ time ansible-pull -i /tmp/inventory_localhost -U file:///tmp/sni_poc_cispatching
 
 
 Infrastructure setup inventory for bootstraping a VM with `ansible-pull` method.
-```
-
-
-
-
 
 NEO Create VM
 ```

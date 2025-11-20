@@ -1,7 +1,7 @@
 
 
 smallest code snippets for channel
-```
+```golang
 type Worker struct {
 	jobs chan int
 }
@@ -23,7 +23,7 @@ func main() {
 
 Minimum granularity `Chan` + `Go`
 
-```
+```golang
 func square(x int, ch chan int) {
 	result := x * x
 	ch <- result // passing result to channel

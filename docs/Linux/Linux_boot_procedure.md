@@ -37,3 +37,13 @@ ls /sys/firmware/efi
 | 分区表位置    | 第0扇区            | 开头 + 结尾都有（冗余）         |
 | 系统兼容性    | 老旧系统支持好         | 新系统兼容性好（Win 8+/Linux） |
 
+graph TD
+    A[BIOS/UEFI Firmware] -->|POST + 初始化硬件| B[Bootloader<br/>（GRUB2 / U-Boot / systemd-boot）]
+    B -->|1. 加载 vmlinuz<br/>2. 加载 initrd/initramfs<br/>3. 传递 cmdline| C[内核解压并初始化<br/><b>👉 此即“内核被启动”的时刻</b>]
+    C --> D[内核执行早期初始化：<br/>- 设置内存管理<br/>- 初始化调度器<br/>- 挂载 initramfs 为临时根]
+    D --> E[执行 initramfs 中的 /init 脚本<br/>（由 dracut/mkinitcpio 生成）]
+    E --> F[探测硬件、加载模块<br/>（如：LVM / RAID / dm-crypt / NVMe 驱动）]
+    F --> G[挂载真实根文件系统<br/>mount /dev/xxx → /sysroot]
+    G --> H[pivot_root + switch_root<br/>丢弃 initramfs，切换到真实根]
+    H --> I[执行 /sbin/init<br/>（通常是 systemd）]
+    I --> J[启动用户空间服务<br/>multi-user / graphical target]

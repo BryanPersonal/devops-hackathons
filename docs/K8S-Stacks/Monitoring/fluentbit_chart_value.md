@@ -296,3 +296,86 @@ fluent-bit:
           storage.metrics           on
 
 ```
+
+Good visualization from Plutuno with Loki as datasource.
+https://docs.fluentbit.io/manual/data-pipeline/outputs/loki#labels
+https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/record-accessor#format 
+```
+当前的 Fluent Bit loki OUTPUT 配置 只能访问顶层字段（如 cluster, tenant.id），无法直接访问 message 里面的嵌套 JSON 字段（如 reason, involvedObject.kind 等）。
+
+{
+	"time": "2025-10-13T03:14:48.276729433Z",
+	"stream": "stdout",
+	"_p": "F",
+	"message": "[{\"date\":1760325287.0,\"kind\":\"Event\",\"apiVersion\":\"v1\",\"metadata\":{\"name\":\"bot-core-cm.186c62e03e925b66\",\"namespace\":\"patching\",\"uid\":\"d56225cd-d301-4038-bb0c-34aa11848bf9\",\"resourceVersion\":\"555704\",\"creationTimestamp\":\"2025-10-08T02:24:29Z\",\"managedFields\":[{\"manager\":\"vault-secrets-operator\",\"operation\":\"Update\",\"apiVersion\":\"v1\",\"time\":\"2025-10-13T03:14:47Z\",\"fieldsType\":\"FieldsV1\",\"fieldsV1\":{\"f:count\":{},\"f:firstTimestamp\":{},\"f:involvedObject\":{},\"f:lastTimestamp\":{},\"f:message\":{},\"f:reason\":{},\"f:reportingComponent\":{},\"f:source\":{\"f:component\":{}},\"f:type\":{}}}]},\"involvedObject\":{\"kind\":\"VaultStaticSecret\",\"namespace\":\"patching\",\"name\":\"bot-core-cm\",\"uid\":\"3c24092f-92dc-4645-a665-843c6d45685e\",\"apiVersion\":\"secrets.hashicorp.com/v1beta1\",\"resourceVersion\":\"102593641\"},\"reason\":\"VaultClientError\",\"message\":\"Failed to read Vault secret: empty response from Vault, path=\\\"ops-bot/data/mgmt/gitops/new-bot\\\"\",\"source\":{\"component\":\"VaultStaticSecret\"},\"firstTimestamp\":\"2025-10-08T02:24:29Z\",\"lastTimestamp\":\"2025-10-13T03:14:47Z\",\"count\":7213,\"type\":\"Warning\",\"eventTime\":null,\"reportingComponent\":\"VaultStaticSecret\",\"reportingInstance\":\"\",\"inventory.landscape_name\":\"SNI-STAGING\",\"cluster\":\"maxwell\",\"tenant.id\":\"c0044\",\"sourcetype.generic\":\"log\",\"sourcetype.specific\":\"si_shoot_log\"}]",
+	"inventory.landscape_name": "SNI-STAGING",
+	"cluster": "maxwell",
+	"tenant.id": "c0044",
+	"sourcetype.generic": "log",
+	"sourcetype.specific": "si_shoot_log"
+}
+
+# Step 1: 解析 message 字段（它是一个 JSON 字符串）
+[FILTER]
+    Name                parser
+    Match               *
+    Key_Name            message
+    Parser              json_array
+    Reserve_Data        On
+    Preserve_Key        Off   # 解析后替换 message
+
+# Step 2: 因为 message 是数组 [ {...} ]，取第一个元素提升到顶层
+[FILTER]
+    Name                nest
+    Match               *
+    Operation           lift
+    Nested_under        message
+    Add_prefix          event_   # 可选：加前缀避免冲突
+
+# 现在 record 中会有 event_0_date, event_0_kind, event_0_metadata 等字段
+# 但我们真正想要的是 event_0 的内容，所以再做一次展开（可选）
+
+# Step 3（推荐）：用 modify 提取关键字段到顶层（更清晰）   为什么一定是$event_0因为 message 是 数组，可能包含多个事件；
+[FILTER]
+    Name                modify
+    Match               *
+    Add                 event_reason        $event_0['reason']
+    Add                 event_type          $event_0['type']
+    Add                 involved_kind       $event_0['involvedObject']['kind']
+    Add                 involved_name       $event_0['involvedObject']['name']
+    Add                 event_message       $event_0['message']
+    # 注意：tenant.id 和 cluster 已在顶层，无需提取
+
+💡 说明： 
+
+message 是字符串 "[{...}]"，先用 parser 解析成数组；
+nest lift 将数组第一个元素（message[0]）提升为 event_0 对象；
+modify Add 从 event_0 中提取关键字段到顶层，便于在 Labels 中引用。
+
+步骤 2️⃣：修改 loki OUTPUT 的 Labels
+
+[OUTPUT]
+    Name                loki
+    Match               *
+    host                vali-sidevops-vali
+    port                3100
+    uri                 /vali/api/v1/push
+    tenant_id           "{{ .Values.shoot_name }}"
+    auto_kubernetes_labels off   # 建议关闭，手动控制更清晰
+    remove_keys         kubernetes,statefulset_kubernetes_io_pod_name,message,event_0
+
+    Labels              job=fluent-bit,
+                        namespace=$kubernetes['namespace_name'],
+                        pod=$kubernetes['pod_name'],
+                        node=$kubernetes['host'],
+                        container=$kubernetes['container_name'],   # 修复拼写
+                        ip=$kubernetes['cni.projectcalico.org/podIP'],
+                        cluster=$cluster,
+                        tenant_id=$`tenant.id`,
+                        event_reason=$event_reason,
+                        event_type=$event_type,
+                        involved_kind=$involved_kind,
+                        involved_name=$involved_name,
+                        sourcetype=$`sourcetype.specific`
+
+```

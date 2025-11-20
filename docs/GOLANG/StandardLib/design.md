@@ -81,7 +81,7 @@ main()
 | &RPCError{...} | 是取地址表达式，创建结构体并返回其指针 |
 | 为什么返回指针？| 高效，可为nil 、符合error接口、与标准库一致 |
 
-```
+```golang
 package main
 
 import "fmt"

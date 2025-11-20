@@ -368,3 +368,13 @@ Golang中 make和new的区别
 | 内存 | 占内存（拷贝数据）   | 占用较少内存（只拷贝地址）        |
 | 用途 | 传值          | 引用修改原数据              |
 | 用法 | 直接访问字段      | 需要通过 `->`（Go 自动解引用）  |
+
+```
+type Logger struct{}
+func (l *Logger) Info(msg string) {
+    fmt.Println("[INFO]", msg)
+}
+
+空结构体常用于：仅作为方法接收者、信号通道值、占位符等。
+✅ 优势：无内存开销，可安全复用（如全局单例），符合 Go “zero value is useful” 哲学。
+```

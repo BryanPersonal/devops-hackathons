@@ -98,3 +98,43 @@ openstack user list
 openstack bgpvpn list
 openstack router list -c ID -c Name -c Project
 ```
+
+```
+// check share status/state
+
+I577081 @ na-us-2 > neo > neo-na-us-2-factoryus4-st-b01 > openstack share list --name ec2volume80816 -f json 
+[
+  {
+    "ID": "ae225fe5-13cc-47e5-bf60-603a9dcb2452",
+    "Name": "ec2volume80816",
+    "Size": 2500,
+    "Share Proto": "NFS",
+    "Status": "available",
+    "Is Public": false,
+    "Share Type Name": "default",
+    "Host": "",
+    "Availability Zone": "na-us-2b"
+  }
+]
+I577081 @ na-us-2 > neo > neo-na-us-2-factoryus4-st-b01 > openstack share set --help
+usage: openstack share set [-h] [--property <key=value>] [--name <name>] [--description <description>] [--public <public>] [--status <status>] <share>
+
+Set share properties
+
+positional arguments:
+  <share>       Share to modify (name or ID)
+
+options:
+  -h, --help            show this help message and exit
+  --property <key=value>
+                        Set a property to this share (repeat option to set multiple properties)
+  --name <name>
+                        New share name. (Default=None)
+  --description <description>
+                        New share description. (Default=None)
+  --public <public>
+                        Level of visibility for share. Defines whether other tenants are able to see it or not.
+  --status <status>
+                        Explicitly update the status of a share (Admin only). Examples include: available, error, creating, deleting, error_deleting.
+
+```

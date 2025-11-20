@@ -46,7 +46,7 @@ worker goroutine:   [run]   [run]   [run]   →  Done() --┘
 
 
 
-```
+```golang
 import (
     "fmt"
     "sync"

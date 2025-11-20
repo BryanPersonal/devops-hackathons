@@ -61,3 +61,9 @@ lockd、statd：处理文件锁（端口也动态）
 📌 NFSv4 为什么不需要？
 因为 NFSv4 把挂载、文件操作、锁等全部集成到 单一协议，直接连 2049，不再需要“查号台”。 
 
+
+
+
+### Solution of idmapping/root_squash 
+
+https://documentation.global.cloud.sap/docs/customer/storage/file-storage/fs-howto/filestore-start-nfsv4/ 
