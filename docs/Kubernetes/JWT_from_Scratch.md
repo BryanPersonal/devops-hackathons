@@ -2,7 +2,7 @@ JWT（JSON Web Token）是一种开放标准（RFC 7519），用于在各方之�
 
 ## JWT 的基本结构
 
-- 注意：JWT 通常用于授权（authorization），而非单纯的认证（authentication）。
+- 注意:JWT 通常用于授权（authorization），而非单纯的认证（authentication）。
 
 ## JWT 在 Kubernetes 中的核心应用
 
@@ -17,7 +17,7 @@ Kubernetes 原生支持 JWT 作为 ServiceAccount 的令牌载体，主要用于
 
 ### 从 API Server 获取 JWKS 示例
 
-命令：
+命令:
 
 ```bash
 ❯ k get --raw /openid/v1/jwks | jq .
@@ -62,5 +62,5 @@ Kubernetes 原生支持 JWT 作为 ServiceAccount 的令牌载体，主要用于
 
 | 系统 / 工具 | 偏好的密钥格式 | 原因 |
 |---|---|---|
-| **Web / OIDC / JWT 生态**（如 Auth0、Keycloak、Kubernetes JWKS） | ✅ **JWK / JWKS**（JSON） | • 易嵌入 HTTP 响应（JSON API）<br>• 天然支持多密钥轮换（`keys: []`）<br>• `kid` 字段便于密钥选择 |
-| **传统 PKI / OpenSSL / TLS / SSH 生态** | ✅ **PEM**（Base64 文本） | • 与 X.509 证书体系深度集成<br>• 几乎所有底层库（OpenSSL、GnuTLS、BoringSSL）原生支持<br>• 便于人工查看、编辑、传输（纯文本） |
+| **Web / OIDC / JWT 生态**（如 Auth0、Keycloak、Kubernetes JWKS） | ✅ **JWK / JWKS**（JSON） | • 易嵌入 HTTP 响应（JSON API）• 天然支持多密钥轮换（`keys: []` • `kid` 字段便于密钥选择 |
+| **传统 PKI / OpenSSL / TLS / SSH 生态** | ✅ **PEM**（Base64 文本） | • 与 X.509 证书体系深度集成• 几乎所有底层库（OpenSSL、GnuTLS、BoringSSL）原生支持• 便于人工查看、编辑、传输（纯文本） |
