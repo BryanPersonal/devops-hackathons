@@ -36,13 +36,13 @@ spec:
       providerConfig:
         apiVersion: service.cert.extensions.gardener.cloud/v1alpha1
         issuers:
-          - email: bryan.chen01@sap.com
-            name: sapca
-            server: https://acme.pki.net.sap/pgwy/acme/directory
+          - email: bryan.chen01@ppp.com
+            name: pppca
+            server: https://acme.pki.net.ppp/pgwy/acme/directory
             precheckNameservers:
-              - ns1.eu-de-1.cloud.sap
-              - ns2.eu-de-1.cloud.sap
-              - ns3.eu-de-1.cloud.sap
+              - ns1.eu-de-1.cloud.ppp
+              - ns2.eu-de-1.cloud.ppp
+              - ns3.eu-de-1.cloud.ppp
 ```
 
 
@@ -56,7 +56,7 @@ metadata:
     # Annotation to let Gardener now that it should manage the certificates for this Ingress
     cert.gardener.cloud/purpose: managed
     # Indicating cert-manager to use the custom issuer
-    cert.gardener.cloud/issuer: sapca
+    cert.gardener.cloud/issuer: pppca
     # Optional but recommended, this is going to create the DNS entry at the same time
     dns.gardener.cloud/class: garden
     dns.gardener.cloud/ttl: "600"
@@ -64,11 +64,11 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - "web081.in.sidevops.c.eu-de-1.cloud.sap"
+        - "web081.in.sidevops.c.eu-de-1.cloud.ppp"
       # Certificate and private key reside in this secret.
       secretName: testsecret-tls  
   rules:
-    - host: "web081.in.sidevops.c.eu-de-1.cloud.sap"
+    - host: "web081.in.sidevops.c.eu-de-1.cloud.ppp"
       http:
         paths:
           - path: /
@@ -91,7 +91,7 @@ metadata:
   name: nginx-dnsentry
   namespace: web-app
 spec:
-  dnsName: web081.in.sidevops.c.eu-de-1.cloud.sap
+  dnsName: web081.in.sidevops.c.eu-de-1.cloud.ppp
   ttl: 600
   targets:
   - 10.47.19.231
@@ -153,7 +153,7 @@ data:
       }
 
       location /bucket {
-        proxy_pass https://objectstore-3.eu-nl-1.cloud.sap:443/v1/AUTH_adde6fddf0f8457f9b796c337aaa5842/081-container/;
+        proxy_pass https://objectstore-3.eu-nl-1.cloud.ppp:443/v1/AUTH_adde6fddf0f8457f9b796c337aaa5842/081-container/;
         proxy_ssl_verify off;  # 如果不需要验证SSL证书
         rewrite ^/bucket/(.*)$ /$1 break;
         proxy_cache_valid 1h;

@@ -37,7 +37,7 @@ Please visit the following URL in your browser manually: http://localhost:8000
 You got a token with the following claims:
 
 {
-  "sub": "bryan.chen01@sap.com",
+  "sub": "bryan.chen01@ppp.com",
   "iss": "https://gardener-live.accounts.ondemand.com",
   "groups": "employee",
   "last_name": "Chen",
@@ -49,14 +49,14 @@ You got a token with the following claims:
   "iat": 1752498413,
   "first_name": "Bryan",
   "jti": "66d1675f-923a-4fff-8fea-3d545e86cca2",
-  "email": "bryan.chen01@sap.com"
+  "email": "bryan.chen01@ppp.com"
 }
 
 ## 3. Bind a cluster role
 
 Run the following command:
 
-        kubectl create clusterrolebinding oidc-cluster-admin --clusterrole=cluster-admin --user='https://gardener-live.accounts.ondemand.com#bryan.chen01@sap.com'
+        kubectl create clusterrolebinding oidc-cluster-admin --clusterrole=cluster-admin --user='https://gardener-live.accounts.ondemand.com#bryan.chen01@ppp.com'
 
 ## 4. Set up the Kubernetes API server
 

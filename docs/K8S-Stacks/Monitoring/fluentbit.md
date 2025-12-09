@@ -7,12 +7,12 @@ helm show values fluent-bit --version 0.52.0 --repo https://fluent.github.io/hel
 ```
 
 SNI Fluentbit
-https://github.tools.sap/sni-helm-charts/sidevops-fluent-bit/blob/main/values.yaml
+https://github.tools.ppp/sni-helm-charts/sidevops-fluent-bit/blob/main/values.yaml
 
-CIEA Fluentbit: https://github.tools.sap/cia-helm-charts/fluentbit/blob/main/templates/fluentbit-config.yaml
+CIEA Fluentbit: https://github.tools.ppp/cia-helm-charts/fluentbit/blob/main/templates/fluentbit-config.yaml
 
 
-https://github.tools.sap/SIDEVOPS/sidevops-canary-sni-turing/blob/main/argocd/helm_charts/monitoring/fluent-bit/values.yaml
+https://github.tools.ppp/SIDEVOPS/sidevops-canary-sni-turing/blob/main/argocd/helm_charts/monitoring/fluent-bit/values.yaml
 
 
 Technical Reference:

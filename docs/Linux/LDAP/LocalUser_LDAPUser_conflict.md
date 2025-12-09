@@ -11,20 +11,20 @@ One locally in OS / another one in LDAP.  --> 本地 uid=502(wvtadm) LDAP uidNum
 Found file 
 
 ****Analysis****:
-> stat /usr/sap/WVT/W80/exe/sapstartsrv
-  File: /usr/sap/WVT/W80/exe/sapstartsrv
+> stat /usr/ppp/WVT/W80/exe/pppstartsrv
+  File: /usr/ppp/WVT/W80/exe/pppstartsrv
   Size: 15763192        Blocks: 30792      IO Block: 4096   regular file
 Device: fe05h/65029d    Inode: 131802      Links: 1
-Access: (0755/-rwxr-xr-x)  Uid: (  502/  wvtadm)   Gid: (   79/  sapsys)
+Access: (0755/-rwxr-xr-x)  Uid: (  502/  wvtadm)   Gid: (   79/  pppsys)
 
-ldapsearch -ZZ -LLL -H ldap://ldap-eude2-spc.cis-spc-tic.gmp.eu-de-2.cloud.sap -b dc=cis-spc-tic,dc=gmp,dc=eu-de-2,dc=cloud,dc=sap -D cn=slave,ou=users,ou=SYS,dc=cis-spc-tic,dc=gmp,dc=eu-de-2,dc=cloud,dc=sap -W "(&(uidNumber=502))"
+ldapsearch -ZZ -LLL -H ldap://ldap-eude2-spc.cis-spc-tic.gmp.eu-de-2.cloud.ppp -b dc=cis-spc-tic,dc=gmp,dc=eu-de-2,dc=cloud,dc=ppp -D cn=slave,ou=users,ou=SYS,dc=cis-spc-tic,dc=gmp,dc=eu-de-2,dc=cloud,dc=ppp -W "(&(uidNumber=502))"
 Enter LDAP Password:
 
 > ps -u wvtadm
   PID TTY          TIME CMD
-9028 ?        00:04:16 sapstartsrv
-9167 ?        00:00:00 sapstart
-9176 ?        00:11:04 wd.sapWVT_W80
+9028 ?        00:04:16 pppstartsrv
+9167 ?        00:00:00 pppstart
+9176 ?        00:11:04 wd.pppWVT_W80
 (vawd01wvt) i577081@cc02v013193:/etc/openldap>
 > ps -ef | grep 9028
-wvtadm    9028     1  0 Oct11 ?        00:04:16 /usr/sap/WVT/W80/exe/sapstartsrv pf=/usr/sap/WVT/SYS/profile/WVT_W80_vawd01wvt -D -u wvtadm
+wvtadm    9028     1  0 Oct11 ?        00:04:16 /usr/ppp/WVT/W80/exe/pppstartsrv pf=/usr/ppp/WVT/SYS/profile/WVT_W80_vawd01wvt -D -u wvtadm

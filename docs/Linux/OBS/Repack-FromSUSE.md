@@ -3,7 +3,7 @@
 
 :heavy_exclamation_mark: Gone through existing SPEC before writting in hands from scratch
 https://download.opensuse.org/repositories/home:/tbadm/openSUSE_Leap_15.6/src/
-https://obs.cia.net.sap/package/show/home:i541603/bind_exporter
+https://obs.cia.net.ppp/package/show/home:i541603/bind_exporter
 
 
 ```

@@ -36,10 +36,10 @@ cat << EOF > tests/quick_test.yml
     required_var1: "test_value"
     ansibleheader: "#ansibleheader"
     ansiblefooter: "#ansiblefooter"
-    sni_dnsapi_attributes:
+    sni_dnpppi_attributes:
       hiddenmaster:
         fsmount:
-          dnsapi:
+          dnpppi:
             device: 100.70.222.70:/share_6a40942a_f737_4152_a9ab_3eb35e8a8b66
           named:
             device: 100.70.222.70:/share_6a40942a_f737_4152_a9ab_3eb35e8a8b66

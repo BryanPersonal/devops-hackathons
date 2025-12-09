@@ -1,0 +1,83 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: webservers.webserver.example.com
+spec:
+  group: webserver.example.com
+  names:
+    kind: WebServer
+    listKind: WebServerList
+    plural: webservers
+    singular: webserver
+  scope: Namespaced
+  versions:
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              replicas:
+                type: integer
+                minimum: 1
+                maximum: 10
+                description: 指定要创建的 Pod 副本数
+              image:
+                type: string
+                default: nginx:latest
+                description: 指定要使用的容器镜像
+              port:
+                type: integer
+                default: 80
+                description: 指定容器监听的端口
+            required:
+            - replicas
+          status:
+            type: object
+            properties:
+              replicas:
+                type: integer
+                description: 当前运行的 Pod 数量
+              readyReplicas:
+                type: integer
+                description: 就绪的 Pod 数量
+              conditions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                    status:
+                      type: string
+                    reason:
+                      type: string
+                    message:
+                      type: string
+                    lastTransitionTime:
+                      type: string
+                      format: date-time
+    subresources:
+      status: {}
+    additionalPrinterColumns:
+    - name: Replicas
+      type: integer
+      description: 期望的副本数
+      jsonPath: .spec.replicas
+    - name: Ready
+      type: integer
+      description: 就绪的副本数
+      jsonPath: .status.readyReplicas
+    - name: Age
+      type: date
+      jsonPath: .metadata.creationTimestamp
+
+
+
+
+

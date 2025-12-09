@@ -76,7 +76,7 @@ default (default)   cinder.csi.openstack.org   Delete          WaitForFirstConsu
 default-class       cinder.csi.openstack.org   Delete          WaitForFirstConsumer   true                   3d22h
 
 // create secret from literal 
-kubectl create secret generic com.sap.datahub.installers.br.rclone-custom-configuration -n datahub --from-literal=extra_conf="bucket_policy_only = true"
+kubectl create secret generic com.ppp.datahub.installers.br.rclone-custom-configuration -n datahub --from-literal=extra_conf="bucket_policy_only = true"
 
 # Modify existing resource
 kubectl patch deployment my-deployment -p '{"spec": {"replicas":3}}'     // minor updates

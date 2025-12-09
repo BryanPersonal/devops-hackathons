@@ -21,7 +21,7 @@ spec:
         - name: regcred
       containers:
         - name: blackbox-exporter-test
-          image: keppel.eu-de-1.cloud.sap/neo-cc-cis-testing/blackboxexporter:latest
+          image: keppel.eu-de-1.cloud.ppp/neo-cc-cis-testing/blackboxexporter:latest
           ports:
             - containerPort: 9115
           args:

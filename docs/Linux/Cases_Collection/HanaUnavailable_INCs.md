@@ -6,13 +6,13 @@ INC13150725, INC13192790, INC13229197
 Client Errors:
 ```text
 [US4] [hana_a3q_factoryus4] [PROBLEM]: HANA DB Availability
-Database not accessible: Data receive failed (socket timeout). : 100.81.53.245:51108 -> hana-a3q-factoryus4-vtdfvhfu.us4.scp.net.sap:30013 ConnectionID:0 SessionID:0
+Database not accessible: Data receive failed (socket timeout). : 100.81.53.245:51108 -> hana-a3q-factoryus4-vtdfvhfu.us4.scp.net.ppp:30013 ConnectionID:0 SessionID:0
 
 [US4] [hana_a41_factoryus4] [PROBLEM]: HANA DB Availability
-Database not accessible: Data receive failed (socket timeout). : 100.81.53.245:42608 -> hana-a41-factoryus4-iiljm63n.us4.scp.net.sap:30013 ConnectionID:0 SessionID:0
+Database not accessible: Data receive failed (socket timeout). : 100.81.53.245:42608 -> hana-a41-factoryus4-iiljm63n.us4.scp.net.ppp:30013 ConnectionID:0 SessionID:0
 
 [US4] [hana_a0j_factoryus4] [PROBLEM]: HANA DB Availability
-Database not accessible: Data receive failed (socket timeout). : 100.81.55.178:60046 -> hana-a0j-factoryus4-a78helb0.us4.scp.net.sap:30013 ConnectionID:0 SessionID:0
+Database not accessible: Data receive failed (socket timeout). : 100.81.55.178:60046 -> hana-a0j-factoryus4-a78helb0.us4.scp.net.ppp:30013 ConnectionID:0 SessionID:0
 ```
 
 Findings from OS: 

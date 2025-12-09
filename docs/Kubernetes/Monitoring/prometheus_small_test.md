@@ -39,7 +39,7 @@ spec:
     - name: regcred
   containers:
   - name: prometheus
-    image: keppel.eu-de-1.cloud.sap/neo-cc-cis-testing/prometheus:latest
+    image: keppel.eu-de-1.cloud.ppp/neo-cc-cis-testing/prometheus:latest
     args:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"

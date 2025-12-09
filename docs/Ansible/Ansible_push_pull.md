@@ -10,7 +10,7 @@ time ansible-pull -i /tmp/inventory_localhost -U file:///tmp/sni_poc_cispatching
 
 ```
 /usr/bin/ansible-pull \
-  -U https://user:token@github.tools.sap/sni-ansible-playbooks/sni_cispatching_playbook.git \
+  -U https://user:token@github.tools.ppp/sni-ansible-playbooks/sni_cispatching_playbook.git \
   -d /tmp/ansible-pull-workdir \
   -i localhost \
   -C dev neopatching.yml
@@ -205,9 +205,9 @@ NEO Create VM
           tags: [full, basicvm]
       tags: [full, basicvm]
 
-    - name: "Include sni_saphostagent_role"
+    - name: "Include sni_ppphostagent_role"
       ansible.builtin.include_role:
-        name: sni_saphostagent_role
+        name: sni_ppphostagent_role
         apply:
           tags: [full]
       tags: [full]
@@ -221,9 +221,9 @@ NEO Create VM
         install: true
       tags: [full]
 
-    # - name: "Include sni_sapjvm_role"
+    # - name: "Include sni_pppjvm_role"
     #   ansible.builtin.include_role:
-    #     name: sni_sapjvm_role
+    #     name: sni_pppjvm_role
     #     apply:
     #       tags: [full]
     #   vars:

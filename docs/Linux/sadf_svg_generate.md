@@ -10,7 +10,7 @@ START_TIME=$2
 END_TIME=$3
 OUTDIR=$4
 
-mkdir -p "$OUTDIR/$(uname -n)_svgs" && chmod 755 "$OUTDIR"
+mkdir -p "$OUTDIR/$(uname -n)_svgs"
 
 # 定义指标数组 (sar 参数 : 输出文件名)
 declare -A charts=(
@@ -23,6 +23,9 @@ declare -A charts=(
 
   ["-n DEV"]="net_dev.svg"            # 网卡吞吐
   ["-n EDEV"]="net_err.svg"           # 网卡错误
+  ["-n ETCP"]="net_etcp.svg"          # ETCP 网络统计
+  ["-n r"]="net_tcp.svg"            # TCP 统计
+  ["-n UDP"]="net_udp.svg"            # UDP 统计
   ["-n NFS"]="nfs_client.svg"         # NFS 客户端
   ["-q"]="sysload.svg"                # 系统负载
 )
@@ -32,7 +35,7 @@ for key in "${!charts[@]}"; do
   outfile="$OUTDIR/$(uname -n)_svgs/$(uname -n)_${charts[$key]}"
   echo "生成: $outfile"
   sadf -g "$SA_FILE" -s "$START_TIME" -e "$END_TIME" -- $key > "$outfile"
-  chmod -R 755 $OUTDIR/$(uname -n)_svgs/*
+  chmod 755 $OUTDIR/$(uname -n)_svgs/*
 done
 
 
@@ -76,6 +79,9 @@ declare -A charts=(
   ["-b"]="io_transfer.svg"
   ["-n DEV"]="net_dev.svg"
   ["-n EDEV"]="net_err.svg"
+  ["-n ETCP"]="net_etcp.svg"
+  ["-n TCP"]="net_tcp.svg"
+  ["-n UDP"]="net_udp.svg"
   ["-n NFS"]="nfs_client.svg"
   ["-q"]="sysload.svg"
 )

@@ -52,7 +52,7 @@ docker image history `<imageid>` 查看某个镜像各层内容及对应大小
 i577081@vsa9425603:/tmp> sudo docker images --filter "dangling=true"
 REPOSITORY                                                                        TAG       IMAGE ID       CREATED       SIZE
 <none>                                                                            <none>    aa70b42ace47   7 hours ago   67MB
-gmpcisautomation.int.repositories.cloud.sap/cis-automation-container/sles15_sp3   <none>    a2b7a98627a8   4 days ago    3.82GB
+gmpcisautomation.int.repositories.cloud.ppp/cis-automation-container/sles15_sp3   <none>    a2b7a98627a8   4 days ago    3.82GB
 
 i577081@vsa9425603:/tmp> sudo docker image history a2b7a98627a8
 IMAGE          CREATED      CREATED BY                                      SIZE      COMMENT
@@ -82,32 +82,32 @@ docker exec -it <容器ID或容器名称> /bin/bash
 #### Config file
 /home/i577081/.docker/config.jsone
 
-docker tag sidevops.int.repositories.cloud.sap/sidevops/perl-critic:latest sidevops.int.repositories.cloud.sap/sidevops/perl-critic:bkp_latest
+docker tag sidevops.int.repositories.cloud.ppp/sidevops/perl-critic:latest sidevops.int.repositories.cloud.ppp/sidevops/perl-critic:bkp_latest
 
 #### build docker image
-docker build -t sidevops.int.repositories.cloud.sap/sidevops/perl-critic:$tag .
+docker build -t sidevops.int.repositories.cloud.ppp/sidevops/perl-critic:$tag .
 
 #### quickly build an image locally.
 docker build -t bindprototype:1.0 .
 
 #### push to remove private githut repo
-docker push sidevops.int.repositories.cloud.sap/sidevops/perl-critic
+docker push sidevops.int.repositories.cloud.ppp/sidevops/perl-critic
 
 #### remove container
 docker rm checklib_test 
 
 #### Run container 
-docker run -it --name checklib_test sidevops.int.repositories.cloud.sap/sidevops/perl-critic:latest /bin/sh
+docker run -it --name checklib_test sidevops.int.repositories.cloud.ppp/sidevops/perl-critic:latest /bin/sh
 
 #### Check image history
-docker history sidevops.int.repositories.cloud.sap/sidevops/perl-critic
+docker history sidevops.int.repositories.cloud.ppp/sidevops/perl-critic
 
 
 #### remove docker (dangling) volume
 docker volume rm $(docker volume ls -qf dangling=true)
 
 #### move image from one to the other.
-docker tag sidevops.int.repositories.cloud.sap/sidevops/pycheck keppel.eu-de-1.cloud.sap/si-cicd/pycheck-081:latest
+docker tag sidevops.int.repositories.cloud.ppp/sidevops/pycheck keppel.eu-de-1.cloud.ppp/si-cicd/pycheck-081:latest
 ```
 
 About docker authentication
@@ -116,7 +116,7 @@ After `docker login` docker_service_api/kepple service, a base64 encrypted crede
 
 ```
 k create secret docker-registry keppel-regcred-eu2 \ 
-   --docker-server=kepple.eu-de-2.cloud.sap \
+   --docker-server=kepple.eu-de-2.cloud.ppp \
    --docker-username=I577081@cis/sni-dev-k8s@cis \
    --docker-password=$ccpw \ 
    -n bind-test

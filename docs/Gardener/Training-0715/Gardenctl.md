@@ -5,7 +5,7 @@ https://docs.leaf.cloud/en/latest/gardener/gardenctl/
 
 
 ```
-gardenctl target --garden sap-landscape-canary
+gardenctl target --garden ppp-landscape-canary
 
 --project sni --shoot turing
 

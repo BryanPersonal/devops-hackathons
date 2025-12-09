@@ -2,7 +2,7 @@
 
 
 Source:
-sudo tcpdump -i any host hana-a3q-factoryus4-vtdfvhfu.us4.scp.net.sap and port 30013 -nn -vv -s 0 -w client_test.pcap
+sudo tcpdump -i any host hana-a3q-factoryus4-vtdfvhfu.us4.scp.net.ppp and port 30013 -nn -vv -s 0 -w client_test.pcap
 
 
 DEST:

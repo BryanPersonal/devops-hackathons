@@ -1,7 +1,7 @@
 
 #### Share an external Network to a project 
 
-https://operations.global.cloud.sap/docs/support/playbook/neutron/add-external-network/
+https://operations.global.cloud.ppp/docs/support/playbook/neutron/add-external-network/
 
 Manage Scenario 1: Add SI_DevOps_private_sandbox as __shared network__ to specific project
 
@@ -78,7 +78,7 @@ I577081 @ eu-nl-1 > monsoon3 > SI_DevOps > openstack network show 4d14d9a8-ff1f-
 
 Calculate: <REGION_ASN> * 65536 + 4
 The route-target value generated from 4-byte dotted representation of region’s ASn by formula: (<REGION_ASN> * 65536 + 4):<UNIQUE_ID>. In this example 65130.4:2000 converted to 4268359684:2000
-https://netbox.global.cloud.sap/ipam/asns/
+https://netbox.global.cloud.ppp/ipam/asns/
 
 
 #### RT<->CIS Conn, import/export targets check
@@ -105,7 +105,7 @@ I577081 @ eu-de-1 > cis > clmam-eu-de-1-tools > os bgpvpn show  fd159372-1911-45
 +----------------------+------------------------------------------------------------------------------------------------------------------+
 
 Target values explanation/intruction: 
-https://operations.global.cloud.sap/docs/operation/network/bgpvpn_troubleshooting/
+https://operations.global.cloud.ppp/docs/operation/network/bgpvpn_troubleshooting/
 
 
 ```

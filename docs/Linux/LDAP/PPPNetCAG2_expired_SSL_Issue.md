@@ -7,8 +7,8 @@ FIX: emergency change number:  CHG2745942
 
 ```
 TLSCACertificateFile /etc/openldap/CA.crt
-TLSCertificateFile /etc/openldap/ldapmaster.cis-factory.gmp.ap-cn-1.cloud.sap.crt
-TLSCertificateKeyFile /etc/openldap/ldapmaster.cis-factory.gmp.ap-cn-1.cloud.sap.key
+TLSCertificateFile /etc/openldap/ldapmaster.cis-factory.gmp.ap-cn-1.cloud.ppp.crt
+TLSCertificateKeyFile /etc/openldap/ldapmaster.cis-factory.gmp.ap-cn-1.cloud.ppp.key
 TLSCipherSuite HIGH
 TLSProtocolMin 3.3
 ```
@@ -24,20 +24,20 @@ openssl x509 -in $(awk '/TLSCACertificateFile/ {print $NF}' /etc/openldap/slapd.
 
 Other worknodes: 
 ```
-#  rpm -ql sap-global-cacerts
-/etc/pki/trust/anchors/SAPNetCA_G2.crl
- // checking -- openssl crl -in SAPNetCA_G2.crl -text -noout
+#  rpm -ql ppp-global-cacerts
+/etc/pki/trust/anchors/pppNetCA_G2.crl
+ // checking -- openssl crl -in pppNetCA_G2.crl -text -noout
 
-/etc/pki/trust/anchors/SAPNetCA_G2.pem
-/etc/pki/trust/anchors/SAP_Global_Root_CA.crl
-/etc/pki/trust/anchors/SAP_Global_Root_CA.pem
+/etc/pki/trust/anchors/pppNetCA_G2.pem
+/etc/pki/trust/anchors/ppp_Global_Root_CA.crl
+/etc/pki/trust/anchors/ppp_Global_Root_CA.pem
 ```
 
 What are the root or intermediate certificate usually installed on server ? And how could we monitor ? 
 
 Wiki reference:
-https://wiki.one.int.sap/wiki/display/PKI/SAP+Global+PKI   
-https://wiki.one.int.sap/wiki/display/PKI/SAP+PKI's+Trust+Chain
+https://wiki.one.int.ppp/wiki/display/PKI/ppp+Global+PKI   
+https://wiki.one.int.ppp/wiki/display/PKI/ppp+PKI's+Trust+Chain
 
 
 

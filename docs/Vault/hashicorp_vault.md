@@ -5,11 +5,11 @@
 ```
 export VAULT_TOKEN=<your-vault-token>
 export VAULT_NAMESPACE="gcs/pso_sidevops/playground"
-export VAULT_ADDR=https://vault.tools.sap/
+export VAULT_ADDR=https://vault.tools.ppp/
 ```
 
-- https://pages.github.tools.sap/github/features-and-how-tos/features/actions/how-tos/security-hardening#using-github-app-tokens
-- https://github.tools.sap/I502888/public_pocs/tree/main/vault-jwt-signing
+- https://pages.github.tools.ppp/github/features-and-how-tos/features/actions/how-tos/security-hardening#using-github-app-tokens
+- https://github.tools.ppp/I502888/public_pocs/tree/main/vault-jwt-signing
 
 
 

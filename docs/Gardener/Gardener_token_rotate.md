@@ -4,13 +4,13 @@
 Gardener Hierarchy -> Garden -> Project -> Shoot. 
 
 ```
-gardenctl target --garden sap-landscape-canary --project sni --shoot sni-validation
+gardenctl target --garden ppp-landscape-canary --project sni --shoot sni-validation
 ```
 
 Dockerfile source codes
 ```
 # Stage 1: prepare banaries in alpine
-FROM dockerio.int.repositories.cloud.sap/alpine/curl AS downloader
+FROM dockerio.int.repositories.cloud.ppp/alpine/curl AS downloader
 
 ARG KUBECTL_VERSION=v1.30.1
 ARG VAULT_VERSION=1.15.5
@@ -37,7 +37,7 @@ RUN curl -L "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_a
     chmod +x /yq
 
 # Stage 2: Final image with busybox
-FROM suse.int.repositories.cloud.sap/bci/bci-busybox:15.6.36.1
+FROM suse.int.repositories.cloud.ppp/bci/bci-busybox:15.6.36.1
 
 # Parameters normally passed by the build process
 ARG VERSION=0.0.1
@@ -45,14 +45,14 @@ ARG CI_JOB_TOKEN
 ARG CI_COMMIT_SHORT_SHA
 
 # Parameters according to https://github.com/opencontainers/image-spec/blob/main/annotations.md
-LABEL org.opencontainers.image.authors='SNI SAP Allan Yu'
-LABEL org.opencontainers.image.url='https://github.tools.sap/sni-docker-images/sidevops-gardener-token-rotation'
-LABEL org.opencontainers.image.documentation='https://dev-docs.cia.net.sap/docs/garm/sni-docker-images/sidevops-gardener-token-rotation'
-LABEL org.opencontainers.image.source='https://github.tools.sap/sni-docker-images/sidevops-gardener-token-rotation.git'
+LABEL org.opencontainers.image.authors='SNI ppp Allan Yu'
+LABEL org.opencontainers.image.url='https://github.tools.ppp/sni-docker-images/sidevops-gardener-token-rotation'
+LABEL org.opencontainers.image.documentation='https://dev-docs.cia.net.ppp/docs/garm/sni-docker-images/sidevops-gardener-token-rotation'
+LABEL org.opencontainers.image.source='https://github.tools.ppp/sni-docker-images/sidevops-gardener-token-rotation.git'
 LABEL org.opencontainers.image.version=${VERSION}
 LABEL org.opencontainers.image.revision=${CI_COMMIT_SHORT_SHA}
-LABEL org.opencontainers.image.vendor='SAP SE'
-LABEL org.opencontainers.image.licenses="SAP"
+LABEL org.opencontainers.image.vendor='ppp SE'
+LABEL org.opencontainers.image.licenses="ppp"
 LABEL org.opencontainers.image.title='sidevops-gardener-token-rotation'
 LABEL org.opencontainers.image.description='base image used to achieve gardener token rotation automatically'
 LABEL org.opencontainers.image.base.name="alpine"

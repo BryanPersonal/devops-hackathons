@@ -3,33 +3,33 @@
 - Default domain's Wildcard certificates is being supported from [request-a-wildcard-certificate](https://gardener.cloud/docs/extensions/others/gardener-extension-shoot-cert-service/request_default_domain_cert/#request-a-wildcard-certificate)
 
 
-- https://pages.github.tools.sap/kubernetes/gardener/docs/guides/sap-internal/networking-lb/managed-certs-from-sap-ca/#overview
-- [Configure a Custom Certificate Issuer](https://pages.github.tools.sap/kubernetes/gardener/docs/guides/sap-internal/networking-lb/managed-certs-from-sap-ca/#configure-a-custom-certificate-issuer)  - not in use so far
+- https://pages.github.tools.ppp/kubernetes/gardener/docs/guides/ppp-internal/networking-lb/managed-certs-from-ppp-ca/#overview
+- [Configure a Custom Certificate Issuer](https://pages.github.tools.ppp/kubernetes/gardener/docs/guides/ppp-internal/networking-lb/managed-certs-from-ppp-ca/#configure-a-custom-certificate-issuer)  - not in use so far
 - https://github.com/gardener/gardener-extension-shoot-cert-service
 - https://github.com/gardener/cert-management
 
 __ONLY TWO scenarios for Gardener Certificate Extensions__:
 - [manage-certificates-with-gardener-for-default-domain](https://gardener.cloud/docs/guides/networking/certificate-extension-default-domain/#manage-certificates-with-gardener-for-default-domain)
-- [manage-certificates-with-gardener-for-public-domain](https://pages.github.tools.sap/kubernetes/gardener/docs/guides/networking/certificate-extension/#manage-certificates-with-gardener-for-public-domain) but you must follow the [prerequisite](https://pages.github.tools.sap/kubernetes/gardener/docs/guides/sap-internal/networking-lb/managed-certs-from-sap-ca/#prerequisites)
+- [manage-certificates-with-gardener-for-public-domain](https://pages.github.tools.ppp/kubernetes/gardener/docs/guides/networking/certificate-extension/#manage-certificates-with-gardener-for-public-domain) but you must follow the [prerequisite](https://pages.github.tools.ppp/kubernetes/gardener/docs/guides/ppp-internal/networking-lb/managed-certs-from-ppp-ca/#prerequisites)
 
 __! Procedure of certificate management for public domain__:
 - Generate domain's certificate and key - testsecret-tls | certificate requested by `kind: certificate` ???
-- [using-a-custom-issuer-with-an-ingress](https://pages.github.tools.sap/kubernetes/gardener/docs/guides/sap-internal/networking-lb/managed-certs-from-sap-ca/#using-a-custom-issuer-with-an-ingress) or requesting-a-certificate-for-a-service-type-loadbalancer
+- [using-a-custom-issuer-with-an-ingress](https://pages.github.tools.ppp/kubernetes/gardener/docs/guides/ppp-internal/networking-lb/managed-certs-from-ppp-ca/#using-a-custom-issuer-with-an-ingress) or requesting-a-certificate-for-a-service-type-loadbalancer
 
 
 __Gardener Certificates Extension Feature__:
-- [Supported annotations](https://pages.github.tools.sap/kubernetes/gardener/docs/guides/networking/certificate-extension/#supported-attributes)
+- [Supported annotations](https://pages.github.tools.ppp/kubernetes/gardener/docs/guides/networking/certificate-extension/#supported-attributes)
 - 
 
 :::danger Known Cert Limitations
 :::
 - CN name comply with 64 character limits 
-- Wildcard requests are not supported as of now by the Vendor, according to [SAPNETCAG2+ACME+Guide](https://wiki.one.int.sap/wiki/display/PKI/SAPNETCAG2+ACME+Guide). 
+- Wildcard requests are not supported as of now by the Vendor, according to [pppNETCAG2+ACME+Guide](https://wiki.one.int.ppp/wiki/display/PKI/pppNETCAG2+ACME+Guide). 
 
 
 
 YOU also need to know about ACME:
-a. The server needs to be able to reach the API endpoint on port 443. For Converge Cloud : acme.pki.net.sap
+a. The server needs to be able to reach the API endpoint on port 443. For Converge Cloud : acme.pki.net.ppp
 
 __Question????__
 
@@ -47,18 +47,18 @@ metadata:
     # Annotation to let Gardener now that it should manage the certificates for this Ingress
     cert.gardener.cloud/purpose: managed
     # Indicating cert-manager to use the custom issuer
-    cert.gardener.cloud/issuer: sapca
+    cert.gardener.cloud/issuer: pppca
     # Optional but recommended, this is going to create the DNS entry at the same time
     dns.gardener.cloud/class: garden
     dns.gardener.cloud/ttl: "600"
 spec:
   tls:
     - hosts:
-        - "web-081.in.sidevops.c.eu-de-1.cloud.sap"
+        - "web-081.in.sidevops.c.eu-de-1.cloud.ppp"
       # Certificate and private key reside in this secret.
       secretName: testsecret-tls
   rules:
-    - host: "web-081.in.sidevops.c.eu-de-1.cloud.sap"
+    - host: "web-081.in.sidevops.c.eu-de-1.cloud.ppp"
       http:
         paths:
           - path: /

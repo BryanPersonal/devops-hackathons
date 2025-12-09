@@ -1,4 +1,10 @@
 
+`make` is a built-in function to initialize quote type
+- slice
+- map
+- chan
+
+
 
 1. Slice: `make([]T, length, capacity)` /
 - `[]T` is just a placeholder represent any type of the slice, eg. `[]int`, `[]string`, `[]Mystruct` 

@@ -8,14 +8,14 @@ MISC：
 
 Re-requisites:
 1. Must install the SUGAR GitHub App in their organization
-    - https://github.com/marketplace/sugar-github-app | https://github.tools.sap/organizations/sn1-sit-org/settings/installations/15524
-2. Enable workflow from SAP Hyperspace
-    - https://portal.hyperspace.tools.sap/home
+    - https://github.com/marketplace/sugar-github-app | https://github.tools.ppp/organizations/sn1-sit-org/settings/installations/15524
+2. Enable workflow from ppp Hyperspace
+    - https://portal.hyperspace.tools.ppp/home
 
 
 
 Acronym:
-- Sugar (Solinas Universal Github Action Runners) is a part of [solinas portfolio](https://wiki.one.int.sap/wiki/display/DevFw/Solinas)
+- Sugar (Solinas Universal Github Action Runners) is a part of [solinas portfolio](https://wiki.one.int.ppp/wiki/display/DevFw/Solinas)
 
 
 ```jsx
@@ -52,5 +52,5 @@ jobs:
 Reference:
 1. PR trigger workflow [events-that-trigger-workflows#pull_request](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request)
 2. Workflow built-in var [Using the GITHUB_TOKEN in a workflow](https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication#using-the-github_token-in-a-workflow)
-3. Offical Sugar Doc https://wiki.one.int.sap/wiki/display/DevFw/SUGAR
-4. [sugar-service-solinas-hosted-runners](https://pages.github.tools.sap/github/features-and-how-tos/features/actions/how-tos/runners/#sugar-service-solinas-hosted-runners)
+3. Offical Sugar Doc https://wiki.one.int.ppp/wiki/display/DevFw/SUGAR
+4. [sugar-service-solinas-hosted-runners](https://pages.github.tools.ppp/github/features-and-how-tos/features/actions/how-tos/runners/#sugar-service-solinas-hosted-runners)

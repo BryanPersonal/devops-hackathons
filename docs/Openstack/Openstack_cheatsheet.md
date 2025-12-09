@@ -87,7 +87,7 @@ openstack loadbalancer pool unset --session-persistence 4f82382c-cd42-45fd-b541-
 openstack loadbalancer pool set --session-persistence=  "type=SOURCE_IP" 4f82382c-cd42-45fd-b541-2b5bf03fcd6e
 
 // list EC2 credential
-//https://documentation.global.cloud.sap/docs/customer/storage/object-storage/api-and-cli-4/objectstore-features-s3api/
+//https://documentation.global.cloud.ppp/docs/customer/storage/object-storage/api-and-cli-4/objectstore-features-s3api/
 openstack ec2 credential list 
 
 // list project - in case object storage has an ACL

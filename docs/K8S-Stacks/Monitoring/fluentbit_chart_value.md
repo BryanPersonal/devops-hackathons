@@ -3,7 +3,7 @@ repository: https://fluent.github.io/helm-charts
 ```
 fluent-bit:
   octobus:
-    url: in-https.eude2.ccloud.octobus.tools.sap
+    url: in-https.eude2.ccloud.octobus.tools.ppp
     index: c0044
     generic: log
     specific: si_shoot_log
@@ -11,7 +11,7 @@ fluent-bit:
   shoot_name: sit081
   image:
     repository:
-      dockerio.int.repositories.cloud.sap/fluent/fluent-bit
+      dockerio.int.repositories.cloud.ppp/fluent/fluent-bit
   serviceMonitor:
     enabled: true
   annotations:

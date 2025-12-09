@@ -3,9 +3,9 @@
 ```
 dn = Base Distinguished Name （包含域（DC）和条目自身的信息（如 cn 或 ou 等）。）
 dc = Domain Component (域组件（Domain Component），描述目录树的顶级结构)
-<LDAP Base DN> = 'LDAP Base DN' in GMP technical landscape  eg: `dc=cis-testing,dc=gmp,dc=eu-de-1,dc=cloud,dc=sap`
+<LDAP Base DN> = 'LDAP Base DN' in GMP technical landscape  eg: `dc=cis-testing,dc=gmp,dc=eu-de-1,dc=cloud,dc=ppp`
 
-dc=sap
+dc=ppp
 └── dc=cloud
     └── dc=eu-de-1
         └── dc=gmp
@@ -20,7 +20,7 @@ Or new domain structure (DNS)
 
 ----------------------------------------------
 
-dc=sap
+dc=ppp
   └── dc=int
         └── dc=sni
               └── dc=canaryeu2
@@ -28,13 +28,13 @@ dc=sap
                           └── ou=users
                                 └── cn=slave
 
-dc=sap,dc=int,dc=sni,dc=canaryeu2：这是 LDAP 目录的顶级根。通常代表组织的基本结构，可能与域名相关。
+dc=ppp,dc=int,dc=sni,dc=canaryeu2：这是 LDAP 目录的顶级根。通常代表组织的基本结构，可能与域名相关。
 ou=SYS：在根下的一个组织单元，可能包含系统或管理员级别的条目。
 ou=users：在 ou=SYS 下面的组织单元，专门用于存储用户信息。
 cn=slave：这是 ou=users 组织单元下的一个具体条目，通常表示一个用户对象。
 ```
 每个 dc 表示域组件（Domain Component），通常与组织的域名相关。<br/>
-如果 Base DN 是 dc=cis-testing,dc=gmp,dc=eu-de-1,dc=cloud,dc=sap，那么 LDAP 查询将只在这棵目录树中进行，且搜索范围受限于此子树。
+如果 Base DN 是 dc=cis-testing,dc=gmp,dc=eu-de-1,dc=cloud,dc=ppp，那么 LDAP 查询将只在这棵目录树中进行，且搜索范围受限于此子树。
 #### DN vs DC 之间的关系
 DC 是 DN 的组成部分之一，用于描述域名的层次结构。每个DC表示域名的一部分。
 
@@ -59,15 +59,15 @@ Summary: `-D` 提供身份验证，绑定到服务器；`-b` 指定搜索范围�
 
 ### 2. ldap search base(from sssd.conf)
 
-`ldap_search_base = dc=canaryeu2,dc=sni,dc=int,dc=sap?subtree?(!(ou:dn:=BLOCK))`
+`ldap_search_base = dc=canaryeu2,dc=sni,dc=int,dc=ppp?subtree?(!(ou:dn:=BLOCK))`
 
 
 ### （Important）LDAP Search typical samples
 #### 1. Search a user
 ```
-ldapsearch -LLL -H ldaps://ldap.canaryeu2.sni.int.sap -b dc=canaryeu2,dc=sni,dc=int,dc=sap -D cn=slave,ou=users,ou=SYS,dc=canaryeu2,dc=sni,dc=int,dc=sap -W "(uid=i577081)"
+ldapsearch -LLL -H ldaps://ldap.canaryeu2.sni.int.ppp -b dc=canaryeu2,dc=sni,dc=int,dc=ppp -D cn=slave,ou=users,ou=SYS,dc=canaryeu2,dc=sni,dc=int,dc=ppp -W "(uid=i577081)"
 Enter LDAP Password:
-dn: uid=i577081,ou=users,ou=ADS,dc=canaryeu2,dc=sni,dc=int,dc=sap
+dn: uid=i577081,ou=users,ou=ADS,dc=canaryeu2,dc=sni,dc=int,dc=ppp
 objectClass: top
 objectClass: posixAccount
 objectClass: shadowAccount
@@ -100,7 +100,7 @@ mobile: +8619145607443
 st: China
 telephoneNumber: +862160308572
 physicalDeliveryOfficeName: PVG02, B0.30
-mail: bryan.chen01@sap.com
+mail: bryan.chen01@ppp.com
 postalCode: 201203
 sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCsIfNMUFUY1F+HW1SC9iYa2fUM
  CxD2kzjdqqvdbgZUTrsS2gxxhZXkOtJa1Ocmg0vL/wVUWHik+fHXRBSbI4bCi4V+Pvlm9HG5YlXuU
@@ -115,12 +115,12 @@ sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCsIfNMUFUY1F+HW1SC9iYa2fUM
 
 #### 2. Search a group/CN
 ```
-ldapsearch -LLL -H ldaps://ldap-eude2-spc.cis-spc-tic.gmp.eu-de-2.cloud.sap -b dc=cis-spc-tic,dc=gmp,dc=eu-de-2,dc=cloud,dc=sap -D cn=slave,ou=users,ou=SYS,dc=cis-spc-tic,dc=gmp,dc=eu-de-2,dc=cloud,dc=sap -W "(cn=sapsys)"
+ldapsearch -LLL -H ldaps://ldap-eude2-spc.cis-spc-tic.gmp.eu-de-2.cloud.ppp -b dc=cis-spc-tic,dc=gmp,dc=eu-de-2,dc=cloud,dc=ppp -D cn=slave,ou=users,ou=SYS,dc=cis-spc-tic,dc=gmp,dc=eu-de-2,dc=cloud,dc=ppp -W "(cn=pppsys)"
 
-## 每个环境各有一个cn=sapsys，下面是其中一个案例。
-dn: cn=sapsys,ou=groups,ou=CLMAM-EUDE2-TOOLS,dc=cis-spc-tic,dc=gmp,dc=eu-de-2,dc=cloud,dc=sap
+## 每个环境各有一个cn=pppsys，下面是其中一个案例。
+dn: cn=pppsys,ou=groups,ou=CLMAM-EUDE2-TOOLS,dc=cis-spc-tic,dc=gmp,dc=eu-de-2,dc=cloud,dc=ppp
 objectClass: posixGroup
-cn: sapsys
+cn: pppsys
 gidNumber: 10500
 memberUid: mshadm
 memberUid: lm1adm
@@ -136,27 +136,27 @@ memberUid: fp1adm
 逐字段解析
 1. dn（Distinguished Name）
 dn 表示此条目的完整目录名，它是 LDAP 树结构中唯一标识该条目的路径。
-dn: cn=sapsys,ou=groups,ou=CLMAM-EUDE2-TOOLS,dc=cis-spc-tic,dc=gmp,dc=eu-de-2,dc=cloud,dc=sap：
-cn=sapsys: 表示组的通用名称（Common Name），sapsys 是组的标识。
+dn: cn=pppsys,ou=groups,ou=CLMAM-EUDE2-TOOLS,dc=cis-spc-tic,dc=gmp,dc=eu-de-2,dc=cloud,dc=ppp：
+cn=pppsys: 表示组的通用名称（Common Name），pppsys 是组的标识。
 ou=groups: 表示此条目属于 组织单位 groups。
 ou=CLMAM-EUDE2-TOOLS: 表示此条目进一步归类在组织单位 CLMAM-EUDE2-TOOLS。
-dc=cis-spc-tic,dc=gmp,dc=eu-de-2,dc=cloud,dc=sap：
-dc（Domain Component）表示域名组件。整段表示 LDAP 树的顶级域名为 cis-spc-tic.gmp.eu-de-2.cloud.sap。
+dc=cis-spc-tic,dc=gmp,dc=eu-de-2,dc=cloud,dc=ppp：
+dc（Domain Component）表示域名组件。整段表示 LDAP 树的顶级域名为 cis-spc-tic.gmp.eu-de-2.cloud.ppp。
 2. cn（Common Name）
-cn=sapsys: sapsys 是此组的名称。cn 是 LDAP 对象中通用的标识字段。
+cn=pppsys: pppsys 是此组的名称。cn 是 LDAP 对象中通用的标识字段。
 上下文信息
 从该条目推测出以下信息：
 
 LDAP 树的组织结构:
-LDAP 树从顶层 dc=sap 开始，逐层分为 cloud、eu-de-2 等子域，直到叶子节点 cn=sapsys。
+LDAP 树从顶层 dc=ppp 开始，逐层分为 cloud、eu-de-2 等子域，直到叶子节点 cn=pppsys。
 ou=CLMAM-EUDE2-TOOLS 和 ou=groups 是中间的组织单位。
-sapsys 组的含义:
-sapsys 通常是 SAP 系统中用于定义用户组的名称，用于为操作系统用户提供访问权限。
+pppsys 组的含义:
+pppsys 通常是 ppp 系统中用于定义用户组的名称，用于为操作系统用户提供访问权限。
 总结
 这段 LDAP 条目表示：
 
-一个名为 sapsys 的组，它属于组织单位 groups 和 CLMAM-EUDE2-TOOLS。
-该组归属于 LDAP 树的域名 cis-spc-tic.gmp.eu-de-2.cloud.sap。
+一个名为 pppsys 的组，它属于组织单位 groups 和 CLMAM-EUDE2-TOOLS。
+该组归属于 LDAP 树的域名 cis-spc-tic.gmp.eu-de-2.cloud.ppp。
 
 ```
 

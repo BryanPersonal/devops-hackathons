@@ -17,6 +17,11 @@ https://grafana.com/docs/loki/latest/query/
 | inventory_landscape_name = "SNI-STAGING"
 | reportingComponent = "VaultStaticSecret"
 | type = "Warning"
+
+
+{job="kubernetes-containers",namespace_name="monitoring"}
+| json
+| line_format "{{.message}}"
 ```
 
 
@@ -52,4 +57,14 @@ for i in $(seq 1 $ITER); do
 done
 
 
+```
+
+
+1208
+
+```
+
+{pod_name=~"bind-slave-0|bind-slave-1|bind-slave-2"}
+| json
+| line_format "{{.pod_name}} >>> {{.message}}"
 ```
