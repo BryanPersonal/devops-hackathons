@@ -69,7 +69,6 @@ JWT（JSON Web Token）是一种开放标准（RFC 7519），用于在各方之�
 JWT 的基本结构 
 
 - JWT is for authorization not authentication 
-- 
 
 JWT 在 Kubernetes 中的核心应用
 Kubernetes 原生支持 JWT 作为 ServiceAccount 的令牌载体，主要用于：
