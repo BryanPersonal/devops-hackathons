@@ -1,5 +1,10 @@
 
+0. How to decode secret fastly
 
+```
+kubectl get secret vso-kv -o jsonpath='{.data._raw}' | base64 --decode | jq -r .data
+k get secret cloud-provider-config -n kube-system -o jsonpath='{.data.cloudprovider\.conf}' | base64 --decode
+```
 
 1. View multi-containers' pod logs: `k logs -f bind-landscape-0 --all-containers -n bind-test --prefix`
 

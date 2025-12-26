@@ -11,5 +11,16 @@ ACL is required for newly build-up landscape to connect AV proxy (Presumbly from
 (vadb02nza) cc02v019827:~ # /opt/ds_agent/sendCommand --get GetConfiguration | grep "SecurityProfile"
  <SecurityProfile id='2689' name='$$#84aa#$$_$$%GCS-TM-VISION1%$$CLMAM_Linux_IPS_TEST'>
  </SecurityProfile>
- ```
+```
 
+Debug commands and steps
+```
+·                  Collect TM diag files:
+·                  /opt/ds_agent/dsa_control -d
+·                  Disable agent:
+systemctl stop joschyd.service
+·                  echo 0 > /opt/imal/etc/sophos-enable
+·                  systemctl disable ds_agent
+·                  Trigger crash dump: 
+·                  echo c > /proc/sysrq-trigger
+```
