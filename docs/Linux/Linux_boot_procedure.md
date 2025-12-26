@@ -50,24 +50,20 @@ ls /sys/firmware/efi
 
 ```mermaid
 graph TD
-    A[BIOS/UEFI Firmware] -->|POST + 初始化硬件| B[Bootloader<br/>（GRUB2 / U-Boot / systemd-boot）]
-    B -->|1. 加载 vmlinuz<br/>2. 加载 initrd/initramfs<br/>3. 传递 cmdline| C[内核解压并初始化<br/><b>👉 此即"内核被启动"的时刻</b>]
-    C --> D[内核执行早期初始化：<br/>- 设置内存管理<br/>- 初始化调度器<br/>- 挂载 initramfs 为临时根]
-    D --> E[执行 initramfs 中的 /init 脚本<br/>（由 dracut/mkinitcpio 生成）]
-    E --> F[探测硬件、加载模块<br/>（如：LVM / RAID / dm-crypt / NVMe 驱动）]
-    F --> G[挂载真实根文件系统<br/>mount /dev/xxx → /sysroot]
-    G --> H[pivot_root + switch_root<br/>丢弃 initramfs，切换到真实根]
-    H --> I[执行 /sbin/init<br/>（通常是 systemd）]
-    I --> J[启动用户空间服务<br/>multi-user / graphical target]
+    A["BIOS/UEFI Firmware"] -->|POST + 初始化硬件| B["Bootloader\n(GRUB2 / U-Boot / systemd-boot)"]
+    B -->|"1. 加载 vmlinuz\n2. 加载 initrd/initramfs\n3. 传递 cmdline"| C["内核解压并初始化\n👉 此即内核被启动的时刻"]
+    C --> D["内核执行早期初始化：\n- 设置内存管理\n- 初始化调度器\n- 挂载 initramfs 为临时根"]
+    D --> E["执行 initramfs 中的 /init 脚本\n（由 dracut/mkinitcpio 生成）"]
+    E --> F["探测硬件、加载模块\n（如：LVM / RAID / dm-crypt / NVMe 驱动）"]
+    F --> G["挂载真实根文件系统\nmount /dev/xxx → /sysroot"]
+    G --> H["pivot_root + switch_root\n丢弃 initramfs，切换到真实根"]
+    H --> I["执行 /sbin/init\n（通常是 systemd）"]
+    I --> J["启动用户空间服务\nmulti-user / graphical target"]
 ```
 
 ### 图示：从引导加载器开始
 
-![Linux start from Bootloader](images/LinuxStartFromBootLoader.png "LinuxStartFromBootLoader.png")
-
-> 请将图像文件放到 `docs/Linux/images/LinuxStartFromBootLoader.png`，或者调整图片路径以匹配文件所在位置。
-
-这份流程说明将 Linux 启动分为 硬件层、引导层、内核层、系统层 四个阶段。
+![Linux start from Bootloader](LinuxStartFromBootLoader.png)
 
 这份流程说明将 Linux 启动分为 硬件层、引导层、内核层、系统层 四个阶段。
 
