@@ -161,10 +161,11 @@ func main() {
 	fmt.Println("Hello, World !", p.Name)
 }
 
-```
+```go
  - fmt.Println(p4)     // 打印结构体指针的值，如：&{Ann 30}
  - fmt.Println(*p4)    // 解引用，打印结构体内容：{Ann 30}
  - fmt.Println(&p4)    // 打印的是 p4 的地址，即 **Person
+```
 
 | 方式                       | 类型        | 是否实例化 | 备注           |
 | ------------------------ | --------- | ----- | ------------ |

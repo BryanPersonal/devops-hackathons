@@ -1,6 +1,6 @@
 
 
-   nodes: <subnet for worker node (see below)>
+   nodes: {/* subnet for worker node (see below) */}
    pods: 100.104.0.0/18
    services: 100.104.64.0/18
 

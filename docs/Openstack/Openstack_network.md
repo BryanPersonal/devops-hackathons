@@ -76,12 +76,12 @@ I577081 @ eu-nl-1 > monsoon3 > SI_DevOps > openstack network show 4d14d9a8-ff1f-
 
 #### Converged Cloud ASN 
 
-Calculate: <REGION_ASN> * 65536 + 4
-The route-target value generated from 4-byte dotted representation of region’s ASn by formula: (<REGION_ASN> * 65536 + 4):<UNIQUE_ID>. In this example 65130.4:2000 converted to 4268359684:2000
+Calculate: &lt;REGION_ASN&gt; * 65536 + 4
+The route-target value generated from 4-byte dotted representation of region's ASn by formula: (&lt;REGION_ASN&gt; * 65536 + 4):&lt;UNIQUE_ID&gt;. In this example 65130.4:2000 converted to 4268359684:2000
 https://netbox.global.cloud.ppp/ipam/asns/
 
 
-#### RT<->CIS Conn, import/export targets check
+#### RT&lt;-&gt;CIS Conn, import/export targets check
 
 ```
 I577081 @ eu-de-1 > cis > clmam-eu-de-1-tools > os bgpvpn show  fd159372-1911-4536-94a9-9d667a1490a5

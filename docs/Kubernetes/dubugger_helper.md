@@ -38,7 +38,8 @@ spec:
 kubectl run curl --image=appropriate/curl -it --rm -- sh
 
 https://github.com/nicolaka/netshoot 
-```
+
+```bash
 kubectl run tmp-shell --rm -i --tty --overrides='{"spec": {"hostNetwork": true}}'  --image nicolaka/netshoot -n awx
 ```
 
@@ -48,7 +49,7 @@ kubectl debug node/shoot--sn1--sit-081-test-sitworker-j90ic-z1-69548-98j2w -it -
 
 3. Debug priviledged container
 
-```
+```yaml
 kubectl run debug-node \
   --namespace=default \
   --rm \

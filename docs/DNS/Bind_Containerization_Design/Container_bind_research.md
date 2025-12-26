@@ -41,7 +41,7 @@ Discussion: https://github.com/SUSE/bci/discussions
 - rndc sync -clean 强制清除所有临时文件
 - _default.nzf 是BIND 实现动态Zone管理的核心文件
 - 只有在 BIND 的配置中显式声明 allow-new-zones yes; 后，才能通过 rndc addzone 动态添加或删除 Zone
-- `view any`视图匹配所有客户端：通过 match-clients { any; }; 匹配所有未被其他视图覆盖的客户端请，可将  zone "." zone "localhost" 和 zone "0.0.127.in-addr.arpa" 放在`any` 视图中
+- `view any`视图匹配所有客户端：通过 match-clients `{ any; }` 匹配所有未被其他视图覆盖的客户端请，可将  zone "." zone "localhost" 和 zone "0.0.127.in-addr.arpa" 放在`any` 视图中
     - 仅递归服务需要 根区域 `(.)`, 提供根DNS服务器列表(named.root), 用于递归查询。 权威服务器通常不需要
     - localhost 区域 解析 localhost 到 127.0.0.1，用于本地服务通信。
     - 0.0.127.in-addr.arpa 区域反向解析 127.0.0.1，用于本地日志或工具验证。
