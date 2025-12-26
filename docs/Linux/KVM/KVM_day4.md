@@ -1,4 +1,4 @@
-
+```
 - Vmware can setup HA to fail over VM from one hypervisor to another, with KVM and Openstack it simply reboot/re-create the VM. 
 
 - Harvester / OpenShift Virtualization 
@@ -35,4 +35,6 @@ kvm
 
 
 virt-install --import --name slesmigrate --vcpus 4 --ram 4096 --disk path=/var/lib/libvirt/images/nfs/slesimage.qcow2,format=qcow2 --os-variant sles16 --network network=migratenetwork --autoconsole none
+```
+
 ```

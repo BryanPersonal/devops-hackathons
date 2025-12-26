@@ -1,5 +1,6 @@
 
 
+````
 ```
 BIOS/UEFI
    ↓
@@ -50,15 +51,9 @@ ls /sys/firmware/efi
 
 ```mermaid
 graph TD
-    A["BIOS/UEFI Firmware"] -->|POST + 初始化硬件| B["Bootloader\n(GRUB2 / U-Boot / systemd-boot)"]
-    B -->|"1. 加载 vmlinuz\n2. 加载 initrd/initramfs\n3. 传递 cmdline"| C["内核解压并初始化\n👉 此即内核被启动的时刻"]
-    C --> D["内核执行早期初始化：\n- 设置内存管理\n- 初始化调度器\n- 挂载 initramfs 为临时根"]
-    D --> E["执行 initramfs 中的 /init 脚本\n（由 dracut/mkinitcpio 生成）"]
-    E --> F["探测硬件、加载模块\n（如：LVM / RAID / dm-crypt / NVMe 驱动）"]
-    F --> G["挂载真实根文件系统\nmount /dev/xxx → /sysroot"]
-    G --> H["pivot_root + switch_root\n丢弃 initramfs，切换到真实根"]
-    H --> I["执行 /sbin/init\n（通常是 systemd）"]
-    I --> J["启动用户空间服务\nmulti-user / graphical target"]
+  A[BIOS/UEFI] --> B[Bootloader]
+  B --> C[Kernel]
+  C --> D[Init]
 ```
 
 ### 图示：从引导加载器开始
