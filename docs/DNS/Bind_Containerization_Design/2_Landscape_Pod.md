@@ -4,7 +4,7 @@
 > Scope For POC: ? 
 
 
-Questions:
+### Questions:
 1. Landscape DNS or Delegation go first ?
 2. Replacement of `dns-api ls add <view> Rescursor's FIP` ? 
     - Service Discovery
@@ -12,10 +12,12 @@ Questions:
 4. How long does it take for initial sync from `SOA relay Pod (K8S primary slave)`
 5. TO-DO: How does CIEA utilize Oasis for DNS communications ?? SSH is weak ?? 
 6. Why don't we leverage Bind native zone transfer feature but relyig on SOA on-time notify to each individual pod with VM Primary slave + K8S landscape Pod ? 
+7. K8S landscape solution to expose 1 IP to Customer `resolv.conf` ? By leveraging kubernetes native endpoint mechanism and Openstack LB mechanism. Why
+- Readiness probe to manage the traffic readiness state. 
 
 Note: the logging part depends on `rsyslog` won't work anyhow therefore `landcape-slave-update-bind-config` can't be re-used anyway. 
 
-Design:
+### Design:
 1. Mirror Go solution to what `/usr/bin/dns-api-landscape-slave-update-bind-config` && `dns-api-sshwrapper`does from `LS` to achieve the followings
     - Retrieve TSIG Key over Hashicorp Vault VSO/VSS 
     - Management of
@@ -29,16 +31,16 @@ Design:
 4. Using statefulset instead of deployment even though landscape slave is aimed to be stateless due to the following reasons.
         - Fast bootstrap a Pod from scratch by re-using the Storage. In our case it is cinder volume
         - Mitigate the impact while upgrading
-        - 
 5. Dockerfile
         - Use VOLUME 
                 - for persistence, 有 VOLUME：即使你忘了挂载，Docker 也会在宿主机上自动创建一个匿名卷（Anonymous Volume）。当你删除容器时，这个匿名卷依然存在于宿主机的磁盘上（通常在 /var/lib/docker/volumes/ 下），你可以找回数据。
                 - `kubectl inspec` for operational people to persist the data
+        - FIXME: If we need `named` user from base image `RUN groupadd dirsrv -g 888 && useradd dirsrv -c "User for 389 directory server" -d /var/lib/dirsrv -g 888 -u 888 -s /sbin/nologin`
 6. Helm Charts
 7. ONLY Configure landscape slave `catalog-zones { zone "global.catalog" { type slave; ... default-masters { ip }}`  造成只有两种拉zone的结果
-        - 初始启动 (`AXFR`) + `SOA` refresh timer (3600s)to check `serial number`
+        - 初始启动 (`AXFR`) (TCP due to zone files are larger than 512 bytes which exceeded UDP limitation)+ `SOA` refresh timer (3600s)to check `serial number` (define in SOA record in zone file)
         - 手动触发: `rndc refresh`
-
+8. There was no demand to run rndc remotely from hiddenmaster to the landscape slave therefore adopting `.prep` script to prepare individually. 
 ```
 📉 直接后果：同步延迟 = SOA refresh interval
 假设 Primary Slave 上 global.catalog 的 SOA 记录为：
@@ -52,7 +54,7 @@ global.catalog.  3600  IN  SOA  ns1.example.com. hostmaster.example.com. (
 你在 10:00:00 在 Hidden Master 更新 zone → Primary Slave 10:00:01 完成 IXFR
 Landscape Slave 不会立刻感知
 它会在 10:00:01 + 3600s = 11:00:01 才轮询检查 SOA
-若发现 serial 更新，才发起 IXFR
+若发现 serial 更新，才发起 IXFR(TCP)
 → 最大延迟 = refresh 秒（通常 30m~2h）
 
 场景
@@ -91,16 +93,16 @@ Service (LoadBalancer)
 
 ```mermaid
 sequenceDiagram
-    participant HM as Hidden Master
-    participant PS as Primary Slave (100.70.226.31)
-    participant Relay as SOA Relay (K8s)
-    participant LS0 as Landscape-0
-    participant LS1 as Landscape-1
+    participant HM as Hidden Master (VM)
+    participant PS as Primary Slave (VM)
+    participant Relay as SOA Relay (Go in K8s)
+    participant LS0 as Landscape-0 (K8S)
+    participant LS1 as Landscape-1 (K8S)
 
     HM->>PS: IXFR (serial++)
     PS->>PS: Update zone DB
     PS->>Relay: UDP NOTIFY (to Service VIP)
-    Relay->>Relay: Get Endpoints → [LS0, LS1]
+    Relay->>Relay: Get Endpoints → [LS0, LS1] (Endpoints Service Discovery)
     Relay->>LS0: NOTIFY (zone=global.catalog)
     Relay->>LS1: NOTIFY (zone=global.catalog)
     LS0->>PS: IXFR request (TCP 53, with TSIG key "slave-0-global")
@@ -318,4 +320,45 @@ rndc status
 ```
 25-Dec-2025 04:24:30.998 k8s/catalog-options.conf:14: catz: zone-directory 'slave' not found; zone files will not be saved
 25-Dec-2025 04:24:30.998 k8s/catalog-options.conf:20: catz: zone-directory 'slave' not found; zone files will not be saved
+```
+
+#### Appendix
+
+```
+# bind software & data persistence vol in K8S (required during initial setup)
+/var/lib/named
+/var/lib/named/127.0.0.zone
+/var/lib/named/dyn
+/var/lib/named/localhost.zone
+/var/lib/named/master
+/var/lib/named/named.conf.include
+/var/lib/named/root.hint
+/var/lib/named/slave
+/etc/named.conf
+/etc/slp.reg.d
+/etc/slp.reg.d/bind.reg
+/run/named  ->  emptydir
+
+/usr/bin
+/usr/sbin
+/usr/share
+
+
+
+# 389ds software & data persistence vol in K8S (required during inital setup)
+/var/lib/dirsrv
+/var/log/dirsrv
+/etc/dirsrv
+/etc/dirsrv/config
+/etc/dirsrv/config/certmap.conf
+/etc/dirsrv/config/ldap-agent.conf
+/etc/dirsrv/config/slapd-collations.conf
+/etc/dirsrv/schema
+/etc/dirsrv/schema/99user.ldif
+
+/usr/share/dirsrv
+/usr/share/dirsrv/data
+/usr/share
+/usr/lib
+/usr/lib64
 ```

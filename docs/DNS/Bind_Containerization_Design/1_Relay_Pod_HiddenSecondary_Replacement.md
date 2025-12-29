@@ -301,6 +301,9 @@ dns-api ps add <SERVER>
 
 #### Snippets 
 ```
+
+# HM上新建一个view后自动在Primary Slave上创建的view相关的同步刚需bind信息
+
 //-- VIEW test2 ---------------------------------------------------------------
 
 //---- KEYS for for slaves in view test2
@@ -325,7 +328,7 @@ view "test2" {
         // Downstream LS need notification and AXFR
         notify yes;
 
-        server 100.70.226.131 { keys "slave-0-test2"; };
+        server 100.70.226.131 { keys "slave-0-test2"; };    //  100.70.226.31 key "slave-0-global";   ← 这里的 key 仅用于 IXFR/AXFR！
         server 100.70.226.148 { keys "slave-0-test2"; };
         server 100.70.226.92 { keys "slave-0-test2"; };
         also-notify {
