@@ -36,7 +36,7 @@ Question:
             - `dns-api ps add <LB-FIP>` is presumbly required during initial setup or a __broken state of Loadbalancer__ (E.g misconfigured/removed)" (Follow same __persistent__  LB implementation as LDAP Consumber LB) 
             - How to fix a broken state of HiddenSecondary? Is `dns-api ps add` idempotent ? Zone data discrepancy fix ? 
 3. Do we need to define a virtual role in K8S ? (Probably Label??)    
-4. [Perl] `/usr/bin/dns-api-check-slaves` will check the primary slave number. How will `SOA relay Pod` behave ? <Bryan20260114> I assume this is relay func only. Refer AppendixA to the solution to hiddensecondary
+4. [Perl] `/usr/bin/dns-api-check-slaves` will check the primary slave number. How will `SOA relay Pod` behave ? (Bryan20260114) I assume this is relay func only. Refer AppendixA to the solution to hiddensecondary
 5. [GMP] How to add a new view from GMP after `dns-api view add xx` ? 
 6. `/var/lib/dns-api/state.wip` Do we need transation design in Kubernetes and why ???
 7. How to replace SSH-based solution to what is being done over `dns-api add ps xx` ?
