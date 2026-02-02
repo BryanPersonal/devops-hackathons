@@ -4,7 +4,9 @@
 > Scope For POC: global.catalog
 
 DESC:
-1. SOA Notify Relay Pod will play the role of traditional hiddenprimary in Kubernetes. Relay Pod won't expose Pod ID as it is dynamic therefore behind a dedicated 
+1. ~~SOA Notify Relay Pod will play the role of traditional hiddenprimary in Kubernetes. Relay Pod won't expose Pod ID as it is dynamic therefore behind a dedicated LB~~   this is definitely not the case. 
+
+
 2. 
 
 Design:
@@ -34,7 +36,7 @@ Question:
             - `dns-api ps add <LB-FIP>` is presumbly required during initial setup or a __broken state of Loadbalancer__ (E.g misconfigured/removed)" (Follow same __persistent__  LB implementation as LDAP Consumber LB) 
             - How to fix a broken state of HiddenSecondary? Is `dns-api ps add` idempotent ? Zone data discrepancy fix ? 
 3. Do we need to define a virtual role in K8S ? (Probably Label??)    
-4. [Perl] `/usr/bin/dns-api-check-slaves` will check the primary slave number. How will `SOA relay Pod` behave ? 
+4. [Perl] `/usr/bin/dns-api-check-slaves` will check the primary slave number. How will `SOA relay Pod` behave ? <Bryan20260114> I assume this is relay func only. Refer AppendixA to the solution to hiddensecondary
 5. [GMP] How to add a new view from GMP after `dns-api view add xx` ? 
 6. `/var/lib/dns-api/state.wip` Do we need transation design in Kubernetes and why ???
 7. How to replace SSH-based solution to what is being done over `dns-api add ps xx` ?
@@ -401,4 +403,83 @@ view "test2" {
         masterfile-format text;
         notify yes;
 };
+```
+
+AppendixA: Automate the following logics with `kubernetes operator` as tentative solution.
+
+```perl
+##
+## correct data on primary slaves
+##
+my @on_failure;
+PRIMARYSLAVE: foreach my $slave (sort @{$data{local}{primaryslaves}}) {
+	if (exists $skip{$slave}) {
+		verbose "skipping primary slave $slave because of previous errors\n";
+		next PRIMARYSLAVE;
+	}
+	verbose "fixing primary slave $slave\n";
+	run_with_timeout($TIMEOUT, \&run_remote, $slave, "sudo $DNS_API @DNS_API_OPTS work begin");
+	if ($@) {
+                 $@ =~ /exit=43/ ? warn "backup is running, skip this node $slave" : warn "W: Running $DNS_API @DNS_API_OPTS work begin on $slave: $@";
+		next PRIMARYSLAVE;
+	}
+	push @on_failure, sub{ run_with_timeout($TIMEOUT, \&run_remote, $slave, "sudo $DNS_API @DNS_API_OPTS work rollback") };
+	my $changes;
+
+	# add missing views
+	# The called functions return undef on error and update @errors
+	foreach my $localview (sort keys %{$data{local}{views}}) {
+		if ($opt{force} or not exists $data{remote}{primaryslaves}{$slave}{views}{$localview}) {
+			verbose "\tadding view $localview\n";
+			$changes += add_view($slave,$localview);
+		}
+		$changes += fix_view($slave,$localview) // next PRIMARYSLAVE;
+	}
+	# remove unused views
+	foreach my $remoteview (sort keys %{$data{remote}{primaryslaves}{$slave}{views}}) {
+		next if $data{local}{views}{$remoteview} and not $opt{force};
+		verbose "\tremoving view $remoteview\n";
+		$changes += del_view($slave,$remoteview) // next PRIMARYSLAVE;
+	}
+
+	if ($changes) {
+		verbose "applying $changes changes to $slave\n";
+		run_with_timeout($TIMEOUT, \&run_remote, $slave, "sudo $DNS_API @DNS_API_OPTS work commit");
+		if ($@) {
+			warn "W: applying changes for on server $slave: $@";
+			next PRIMARYSLAVE;
+		}
+		debug "Applied all changes to new on slave server $slave\n";
+	}
+	else {
+		verbose "no changes on $slave\n";
+		run_with_timeout($TIMEOUT, \&run_remote, $slave, "sudo $DNS_API @DNS_API_OPTS work rollback");
+	}
+	@on_failure = ();
+	push @done, $slave;
+} continue {
+	verbose("running on_failure actions for $slave") if @on_failure;
+	eval { $_->() } foreach @on_failure;
+}
+
+```
+
+FIXME: how the operator pull the key/view from hiddenprimary VM ? It is too complex design ?? 
+
+Currently it is using scp. 
+```perl
+sub scp_key_to_server {
+	my ($server, $key, $keydata) = @_;
+	my $fh = File::Temp->new(TEMPLATE => "tempXXXXXX", SUFFIX => ".key");
+	my $fname = $fh->filename;
+	$fh->autoflush;
+	print $fh $keydata;
+	# FIXME: accept-new is available only on newer SSH clients
+	run_with_timeout($TIMEOUT, \&run_local, "scp -q -o StrictHostKeyChecking=no $SOURCE_OPT -i $dnsapiuser_key_file $fname $dnsapiuser\@$server:");
+	if ($@) {
+		warn "w: copying key $key to server $server: $@";
+		return undef;
+	}
+	return $fname;
+}
 ```

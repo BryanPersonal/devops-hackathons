@@ -2,6 +2,7 @@
 
 1. How can I use those fragments (`[]byte()`, `json.Marshal(v any) ([]byte, error)`, `json.Unmarshal(data []byte, v any) error` ) as flexible as chopstick ? `;)`
 - Marshal 的作用不是“打印给人看”，而是“把 Go 数据变成标准 JSON 文本，供机器交换使用”。 `Marshal`是序列化为`JSON`
+- `data := []byte("hello")` 把一个值转换成"字节切片"，这是Go里处理I/O、网络、编码的标准载体。
 
 2. `fmt.Println ( %+v )`  ? and Logging ??   
 
@@ -58,3 +59,78 @@ func main() {
 > `map[T]struct{}`   是 Go 社区广泛采用的、事实标准的「集合（set）模拟方式」, 因为golang中没有像python中的 `set()`  
 
 9. `c := make(chan Time, 1)`
+
+10. Go中常用非阻塞检查，检查channel是否关闭
+
+```
+// Check if shutdown channel is closed
+    select {
+    case <-s.shutdown:
+        return false
+    default:
+		// blank or wrapped logics while channel is open
+    }
+```
+
+11. Go Interface 设计 
+
+```go
+package main
+
+import "fmt"
+
+// 只关心能做什么
+// n：本次实际写入的字节数
+// Read 不是一次性读完，而是“流式”
+// 虽然叫 Reader，但它不等于文件读取。
+// 它可以代表：
+// 文件
+// 网络连接
+// 内存 buffer
+// 压缩流
+// 加密流
+// 日志流
+// 👉 只要能“产出字节”，它就是 Reader
+type Reader interface {
+	Read(p []byte) (n int, err error)
+}
+
+type File struct {
+	name string
+}
+
+// File won't implement Reader
+// 接收者是指针：
+// 避免拷贝
+// 符合真实 File 语义
+
+func (f *File) Read(p []byte) (int, error) {
+	n := copy(p, "hello")
+	return n, nil
+}
+
+// 为什么不是 Read() []byte？
+// 因为 Go 选择了 “由调用方控制内存”：
+// 避免频繁分配（GC 压力小）
+// 可复用 buffer（高性能）
+// 可精确控制读取大小
+func ReadSomething(r Reader) {
+	buf := make([]byte, 10)
+	n, _ := r.Read(buf)
+	fmt.Println(string(buf[:n]))
+}
+
+func main() {
+	f := &File{name: "a.txt"}
+	ReadSomething(f) // it bounds the interface
+}
+```
+
+12. Struct design. 
+
+```go
+type IPValidator struct {
+	allowedNets []*net.IPNet  // quote IPNet struct instead of constructing
+	logger      *zap.Logger
+}
+```

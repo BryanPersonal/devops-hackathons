@@ -53,3 +53,9 @@ Analysis:
 目的：将日志输出从 logger（依赖 systemd）改为直接输出到 标准错误流（stderr），适配容器环境。
 sed 命令：替换脚本中的日志命令，确保警告信息通过 echo 输出到 stderr。
 
+4. Why 389ds is using istio gateway rather than typical Load Balancer ?
+
+It is using headless svc
+```
+ldap-supplier.factoryeu2.sni.int.sap
+```

@@ -131,5 +131,22 @@ kubectl get secret ingress-tls-secret -n web-app -o jsonpath="{.data['tls\.crt']
 # check kube system events
 kubectl get events -n kube-system --field-selector involvedObject.name=coredns-5dd5756b68-96ztt
 
+# Check coreDNS listen and take the tcpdump 
+1. Get the containerID of coreDNS
+2. pstree -pac 只看进程不看线程 pstree -pactl 包括线程和长行，适合深度排查 比如： 你想知道某个 Java 或 DNS 应用为什么占用 CPU 高（查看是否有过多线程）
+3. nsenter -t <PID> -n  
 ```
-    `
+| 特性 | 进程 | 线程 | 协程 |
+|------|------|------|------|
+| 管理者 | 操作系统 | 操作系统 | 程序员/编程语言 (用户态) |
+| 内存占用 | 很大 (MB 级别) | 较大 (KB~MB 级别) | 极小 (KB 级别) |
+| 切换速度 | 慢 (需要上下文切换) | 中等 | 极快 |
+| 数据共享 | 默认隔离，需 IPC 通信 | 同一进程内共享内存 | 同一进程内共享内存 |
+| 稳定性 | 高（一个死不影响其他） | 中（一个死可能全死） | 中 |
+
+
+
+```
+Check Pod Security Admission 
+kubectl get ns -o custom-columns="NAME:.metadata.name,ENFORCE:.metadata.labels.pod-security\.kubernetes\.io/enforce,WARN:.metadata.labels.pod-security\.kubernetes\.io/warn,AUDIT:.metadata.labels.pod-security\.kubernetes\.io/audit"
+```

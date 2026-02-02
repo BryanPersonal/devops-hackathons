@@ -1,0 +1,1 @@
+https://blog.wu-boy.com/2025/10/from-natural-language-to-k8s-operations-the-mcp-architecture-and-practice-of-kubectl-ai-en/

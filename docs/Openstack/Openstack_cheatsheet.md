@@ -138,3 +138,12 @@ options:
                         Explicitly update the status of a share (Admin only). Examples include: available, error, creating, deleting, error_deleting.
 
 ```
+
+I575997 @ eu-de-1 > cis > gmp-eu-de-1-cis-spc-tic > openstack router add subnet cis-gmp-eu-de-1-cis-spc-tic-storage-01 65eb8404-7568-4079-8b9a-83a239e4602a
+ConflictException: 409: Client Error for url: https://network-3.eu-de-1.cloud.sap/v2.0/routers/be83166c-efa8-4bfb-8677-a2596af151aa/add_router_interface, Error cannot perform router interface attachment due to Callback asr1k_neutron_l3.plugins.l3.service_plugins.asr1k_router_plugin.L3RpcNotifierMixin._check_internal_net_az_hints-114568 failed with "AZ hint of router and network do not match (router is in [], network in eu-de-1a)" while attempting the operation.
+
+From UI, also failed:
+Same error info:
+Api Error cannot perform router interface attachment due to Callback asr1k_neutron_l3.plugins.l3.service_plugins.asr1k_router_plugin.L3RpcNotifierMixin._check_internal_net_az_hints-5758336 failed with "AZ hint of router and network do not match (router is in [], network in eu-de-1a)" while attempting the operation.. 
+
+Yang, Boyu That is expected. Routers and any networks you want to attach need to be either "stretched" (no az-hint) or located in the same AZ. The combination of az hinted NW vs. stretched router won't work. You need to specify the same az-hint when creating the router as the NW has.
