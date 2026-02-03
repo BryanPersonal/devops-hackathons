@@ -734,8 +734,7 @@ env:
 
 ### 内部文档
 
-- [凭证管理文档](./docs/credentials-management.md)
-- [README](./README.md)
+`credentials-management.md`
 
 ## 贡献指南
 
