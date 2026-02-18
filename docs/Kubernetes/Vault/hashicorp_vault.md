@@ -99,3 +99,44 @@ vault secrets enable -namespace=bd/<child-namespace> -version=2 kv
 
 
 ```
+Note: vault auth list  # To check JWT
+
+#### Check JWT details (vault and gardener shoot connection)
+
+```
+❯ vault read auth/jwt-maxwell-canary-sni/config
+
+Key                                     Value
+---                                     -----
+bound_issuer                            https://api.maxwell.sni.internal.canary.k8s.ondemand.com
+default_role                            jwt-role-maxwell-canary-sni
+jwks_ca_pem                             n/a
+jwks_pairs                              []
+jwks_url                                n/a
+jwt_supported_algs                      []
+jwt_validation_pubkeys                  [-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAtsRgb1I40UvDxFNifkLv
+CxxxxnMBToxxx
+-----END PUBLIC KEY-----]
+namespace_in_state                      true
+oidc_client_id                          n/a
+oidc_discovery_ca_pem                   n/a
+oidc_discovery_url                      n/a
+oidc_response_mode                      n/a
+oidc_response_types                     []
+provider_config                         map[]
+unsupported_critical_cert_extensions    []
+
+
+### What happened there in one of problem was that serviceaccount key `bound_issuer`of shoot cluster got changed
+
+❯ vault read auth/jwt-maxwell/config
+Key                                     Value
+---                                     -----
+bound_issuer                            https://discovery.ingress.garden.canary.k8s.ondemand.com/projects/sni/shoots/e4b05e3b-9ca0-45da-b1a3-5443b988e0ff/issuer
+default_role                            jwt-role-maxwell
+jwks_ca_pem                             n/a
+jwks_pairs                              []  
+
+
+```

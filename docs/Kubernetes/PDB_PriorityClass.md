@@ -10,7 +10,13 @@
 不是 OOM。
 不是抢占。
 
-Priority
+Priority Class
+⭐ Priority 只对什么生效？
+Priority 只在这两种情况下有意义：
+1. 调度时（谁先被调度）
+2. 抢占时（Preemption）
+DL_6167C66B64BF670280DD1D4A@global.corp.sap
+👉 升级不属于这两类。
 
 PDB Design
 1. PDB will trigger `containers.lifecycle.preStop.exec.command` when draining the node evicting the pod
