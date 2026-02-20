@@ -2,9 +2,87 @@
 
 
 ✅ 总结检查思路：
-On a VM, an example could be: `tcpdump -n -s 0 -i eth0 -w /tmp/${HOSTNAME}.pcap host <IP of vfiler>` 
+- On a VM, an example could be: `tcpdump -n -s 0 -i eth0 -w /tmp/${HOSTNAME}.pcap host <IP of vfiler>` 
 `date +%T:%N; df -h`
+- `rpcinfo -p 10.180.240.25`
+- `ps -eo pid,state,comm | grep "^ *[0-9]* D"`
+- `nfsstat -c` to check `trans` and `timeouts`
+- `watch -n 1 'ps -eo state | grep -c D'`
+- 请进行正常网络问题排查 -> 先测三层 `ping <StorageIP>`，再测二层 `ip neigh show <StorageIP>` or `tcpdump -i eth0 arp and host <nfs-server-ip>`
+- 定位 state D process `` 
+- 检查Security group NFSv3 requires more than `2049`
+- SUSE case `https://support.scc.suse.com/s/cases/500Tr00000uH6DdIAK/cc02v014382-hana-db-server?language=en_US&tabset-e6c09=2`
+- SCI Network requirement `egress port 111 and egress port 2049 
+- `ps -eo pid,stat,wchan,comm | head`    wchan = wait channel
+- `cat /proc/$p/stack` (内核栈（kernel stack）) equals to analyze dump `foreach UN bt | grep -c rpc_wait` 
 
+```
+for p in $(ps -eo pid,state | awk '$2=="D"{print $1}'); do
+  cat /proc/$p/stack 2>/dev/null
+done | grep -c rpc_wait
+```
+
+```
+当你看到：  会比top更有用
+load 很高
+很多 D 状态
+NFS 卡住
+umount 卡死
+ssh 卡住
+系统假死
+
+ps -eo pid,stat,wchan,cmd | grep -E 'D|rpc|nfs'
+如果大量：
+rpc_wait
+nfs_wait_bit
+xprt_transmit
+
+那基本确定是：
+
+👉 NFS server 不响应
+👉 或网络层问题（ARP/路由/防火墙）
+
+ps -eo wchan
+
+= 查看进程在内核中“睡在哪个函数里”
+= 判断它到底卡在哪一层（锁？NFS？磁盘？网络？）
+
+```
+
+```
+Client
+   |
+   |---- tcp/111 ----> rpcbind (portmapper)
+   |                     |
+   |                     |--- 返回：nfs 在 2049
+   |
+   |---- tcp/635 ----> mountd
+   |                     |
+   |                     |--- 返回：export ok
+   |
+   |---- tcp/2049 ----> nfsd
+                         |
+                         |--- 真正文件读写
+```
+
+```
+五、异常场景 4：NFS server 存储挂死
+
+这种情况下：
+rpcinfo 正常 / ping 正常 / 但 IO 超时
+客户端会出现：
+rpc_check_timeout
+nfs_wait_bit_killable
+rpc_wait
+
+四、异常场景 3：NFS 进程挂死但 rpcbind 还活着（⚠️ 最常见）
+仍然能正常输出（和你贴的一样）
+但是
+客户端 IO 全部卡死
+crash 里大量 rpc_wait
+load 很高
+
+```
 
 From SUSE Case - https://scc.suse.com/support/cases/01590773
 ```

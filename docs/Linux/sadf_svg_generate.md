@@ -89,7 +89,8 @@ declare -A charts=(
 for key in "${!charts[@]}"; do
   outfile="$SVG_DIR/${HOSTNAME}_${charts[$key]}"
   echo "生成: $outfile"
-  if ! sadf -g "$SA_FILE" -s "$START_TIME" -e "$END_TIME" -- $key > "$outfile"; then
+  # 参数顺序: -g/-s/-e 为 sadf 选项，-- 后为 sar 选项，datafile 必须放在最后（见 man sadf）
+  if ! sadf -g -s "$START_TIME" -e "$END_TIME" -- $key "$SA_FILE" > "$outfile"; then
       echo "⚠️  警告: sadf 命令失败，参数: $key" >&2
   else
       chmod 644 "$outfile"
