@@ -4,6 +4,7 @@
 ✅ 总结检查思路：
 - On a VM, an example could be: `tcpdump -n -s 0 -i eth0 -w /tmp/${HOSTNAME}.pcap host <IP of vfiler>` 
 `date +%T:%N; df -h`
+- Gather Lay2 connection also `tcpdump -n -s 0 -i eth1 -w /tmp/${HOSTNAME}.pcap 'arp or host 10.180.64.5' 2>/dev/null`
 - `rpcinfo -p 10.180.240.25`
 - `ps -eo pid,state,comm | grep "^ *[0-9]* D"`
 - `nfsstat -c` to check `trans` and `timeouts`
@@ -15,6 +16,7 @@
 - SCI Network requirement `egress port 111 and egress port 2049 
 - `ps -eo pid,stat,wchan,comm | head`    wchan = wait channel
 - `cat /proc/$p/stack` (内核栈（kernel stack）) equals to analyze dump `foreach UN bt | grep -c rpc_wait` 
+- `top → pidstat → perf top` 先定位进程。 Unconclusive ??  Maybe`mpstat -P ALL 1` and `perf top -p <PID>` 来定位锁或单进程瓶颈(CPU Congestion E.g Trendmicro broke 756vCPU system) E.g `_spin_lock schedule mutex_lock`   
 
 ```
 for p in $(ps -eo pid,state | awk '$2=="D"{print $1}'); do
@@ -47,6 +49,28 @@ ps -eo wchan
 = 查看进程在内核中“睡在哪个函数里”
 = 判断它到底卡在哪一层（锁？NFS？磁盘？网络？）
 
+```
+
+```
+# Sample Perf-top Output which have captured trendmicro caused cpu congestion _spin_lock
+
+ Samples: 97K of event 'cpu-clock:ppp', 4000 Hz, Event count (approx.): 20175801065 lost: 0/0 drop: 0/264359
+Overhead  Shared Object                    Symbol
+45.28%  [kernel]                         [k] native_queued_spin_lock_slowpath
+17.91%  [kernel]                         [k] pv_native_safe_halt
+  1.18%  [unknown]                        [.] 0x00007f4912eabd5d
+  1.03%  [kernel]                         [k] finish_task_switch
+  0.71%  [unknown]                        [.] 0x00007f48ec09c723
+  0.70%  hdbindexserver                   [.] memcpy
+  0.55%  [kernel]                         [k] _raw_spin_unlock_irqrestore
+  0.46%  [unknown]                        [.] 0x00007f4904155e32
+  0.38%  [kernel]                         [k] __memcpy
+  0.31%  [kernel]                         [k] _raw_spin_lock
+  0.22%  [kernel]                         [k] module_put
+  0.22%  [kernel]                         [k] update_sd_lb_stats.constprop.149
+  0.22%  hdbindexserver                   [.] memset
+  0.19%  [unknown]                        [.] 0x00007f48f21400e2
+  0.18%  [unknown]                        [.] 0x00007f4904175b4a
 ```
 
 ```
