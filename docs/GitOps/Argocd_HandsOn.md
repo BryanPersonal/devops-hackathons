@@ -8,3 +8,5 @@
     - jsonPointers:
         - /spec/syncPolicy
 ```
+
+`argocd app delete gmp-fluentbit --cascade -y`

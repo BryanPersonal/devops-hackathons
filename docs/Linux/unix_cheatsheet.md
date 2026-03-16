@@ -108,6 +108,7 @@ sudo replay
 
 Every sudo session creates two files - script and timing.
 scriptreplay --timing $id-$id-time-1659693197-b2a4CAEdZZgglrUL $id-$id-script-1659693197-b2a4CAEdZZgglrUL
+zcat ttyout | grep vgs
 ```
 
 Bash execution best practice:

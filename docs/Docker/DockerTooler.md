@@ -11,4 +11,10 @@ skopeo inspect \                                                                
   --override-os linux \
   --override-arch amd64 \
   docker://cia-docker-live.int.repositories.cloud.sap/vault-secrets-operator/vault-secrets-operator:1.0.1
+
+
+# Check all available tags
+skopeo list-tags docker://suse.int.repositories.cloud.sap/bci/golang
+
 ```
+
