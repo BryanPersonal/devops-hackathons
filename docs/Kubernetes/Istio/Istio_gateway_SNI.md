@@ -50,10 +50,10 @@ spec:
       name: https-web
       protocol: HTTPS
     hosts:
-    "www.example.com" # 域名 2 (SNI 不同)
+    "www.dummy.com" # 域名 2 (SNI 不同)
     tls:
       mode: SIMPLE
-      credentialName: web-tls-secret # 引用包含 www.example.com 证书的 K8s Secret
+      credentialName: web-tls-secret # 引用包含 www.dummy.com 证书的 K8s Secret
 ```
 关键点解析：
 相同端口：两个 servers 块都监听 443 端口。
