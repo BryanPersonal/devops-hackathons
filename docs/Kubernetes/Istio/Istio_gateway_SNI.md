@@ -19,7 +19,7 @@ Is2. tio Gateway 中的 SNI 工作原理
 - 监听配置：你在 Gateway 的 servers 列表中定义多个服务器块，它们可以监听相同的端口（如 443），但绑定不同的 hosts（域名）。
 - 证书匹配：每个服务器块可以关联一个或多个 TLS 证书（通过 credentialName 引用 Kubernetes Secret，或直接配置 serverCertificate 等）。
 - 路由决策：
-    - 当外部客户端发起 HTTPS 请求时，Envoy 接收请求并读取 SNI 字段（例如 api.example.com）。
+    - 当外部客户端发起 HTTPS 请求时，Envoy 接收请求并读取 SNI 字段（例如 api.dummy.com）。
     - Envoy 在 Gateway 配置中查找匹配该 SNI 的 servers 条目。
     - 如果找到匹配项，Envoy 使用该条目配置的证书完成 TLS 握手。
     - 握手成功后，流量会根据绑定的 VirtualService 规则转发到集群内部的具体服务。
@@ -41,10 +41,10 @@ spec:
       name: https-api
       protocol: HTTPS
     hosts:
-    "api.example.com" # 域名 1
+    "api.dummy.com" # 域名 1
     tls:
       mode: SIMPLE
-      credentialName: api-tls-secret # 引用包含 api.example.com 证书的 K8s Secret
+      credentialName: api-tls-secret # 引用包含 api.dummy.com 证书的 K8s Secret
   port:
       number: 443
       name: https-web
@@ -57,12 +57,12 @@ spec:
 ```
 关键点解析：
 相同端口：两个 servers 块都监听 443 端口。
-不同 Hosts：分别指定了 api.example.com 和 www.example.com。这就是 SNI 匹配的依据。
+不同 Hosts：分别指定了 api.dummy.com 和 www.dummy.com。这就是 SNI 匹配的依据。
 不同证书：根据 SNI 匹配到的 host，Envoy 会加载对应的 credentialName 中的证书。
 
 4. 常见应用场景
 - 多租户/多域名支持：在不增加额外 IP 地址或端口的情况下，为多个不同的业务域名提供 HTTPS 接入。
-- 通配符证书：你可以配置一个通配符证书（如 *.example.com）来匹配多个子域名，或者为每个子域名配置独立证书以增强安全性隔离。
+- 通配符证书：你可以配置一个通配符证书（如 *.dummy.com）来匹配多个子域名，或者为每个子域名配置独立证书以增强安全性隔离。
 - TLS 透传 (Passthrough)：如果 tls.mode 设置为 PASSTHROUGH，Istio Gateway 不会终止 TLS，而是直接根据 SNI 信息将加密流量转发给后端服务（后端服务负责解密）。这在需要后端处理特定 TLS 扩展或私有协议时很有用。
 
 5. 注意事项
@@ -86,26 +86,26 @@ spec:
 你有两种选择：
 
 方案 A：多个独立证书（多证书模式）
-    场景：api.example.com 属于开发部，www.example.com 属于市场部，或者你需要为不同域名使用不同 CA 颁发的证书。
+    场景：api.dummy.com 属于开发部，www.dummy.com 属于市场部，或者你需要为不同域名使用不同 CA 颁发的证书。
     做法：创建两个 Kubernetes Secret，每个包含一个域名的私钥和证书。
-    SNI 的作用：客户端说“我要找 api.example.com”，Envoy 查找配置，发现匹配该域名的条目指向 api-tls-secret，于是拿出这个特定的证书给客户端。
+    SNI 的作用：客户端说“我要找 api.dummy.com”，Envoy 查找配置，发现匹配该域名的条目指向 api-tls-secret，于是拿出这个特定的证书给客户端。
     优点：权限隔离好，某个证书泄露不影响其他域名；可以混合使用不同供应商的证书。
     缺点：证书管理成本高（需要分别续期、监控）。
 
 方案 B：单个通配符证书（单证书模式）
-    场景：所有子域名都属于同一个组织，且你拥有 *.example.com 的通配符证书。
-    做法：只创建一个 Kubernetes Secret，里面包含 *.example.com 的证书。
+    场景：所有子域名都属于同一个组织，且你拥有 *.dummy.com 的通配符证书。
+    做法：只创建一个 Kubernetes Secret，里面包含 *.dummy.com 的证书。
     配置变化：
     ```
                 servers:
         port: ...
-          hosts: ["api.example.com", "www.example.com"] # 注意：可以写在同一个 server 块里，也可以分开
+          hosts: ["api.dummy.com", "www.dummy.com"] # 注意：可以写在同一个 server 块里，也可以分开
           tls:
             mode: SIMPLE
-            credentialName: wildcard-example-com-secret # 两个 host 共用同一个证书引用
+            credentialName: wildcard-dummy-com-secret # 两个 host 共用同一个证书引用
      ```   
         或者，即使你像之前的例子那样把它们分写在两个 server 块里（为了路由逻辑清晰），你也可以让这两个块引用同一个 credentialName。
-    SNI 的作用：客户端说“我要找 api.example.com”，Envoy 匹配到配置，拿出通配符证书。因为通配符证书本身就涵盖 api.example.com，所以握手成功。
+    SNI 的作用：客户端说“我要找 api.dummy.com”，Envoy 匹配到配置，拿出通配符证书。因为通配符证书本身就涵盖 api.dummy.com，所以握手成功。
     优点：管理简单，只需维护一个证书。
     缺点：私钥一旦泄露，所有子域名都不安全；通配符证书通常比单域名证书贵（如果是商业购买）。
 
@@ -121,14 +121,14 @@ TLS 握手的特殊阶段（Client Hello）：
 2. 发送 Client Hello（明文）：
     - 在 TLS 握手的第一步，客户端发送 Client Hello 消息。
     - 关键点：此时连接尚未加密。
-    - 在这个消息中，包含了一个扩展字段叫 SNI (Server Name Indication)，里面明文写着客户端想访问的域名（例如 `api.example.com`）。
+    - 在这个消息中，包含了一个扩展字段叫 SNI (Server Name Indication)，里面明文写着客户端想访问的域名（例如 `api.dummy.com`）。
 3. Envoy 拦截并读取 SNI：
     - Istio Gateway (Envoy) 收到 `Client Hello`。
     - Envoy 不需要证书来读取这个消息，因为它是明文的。
-    - Envoy 解析出 SNI 字段的内容：`api.example.com`。
+    - Envoy 解析出 SNI 字段的内容：`api.dummy.com`。
 4. Envoy 进行路由/证书查找：
-    - Envoy 拿着 api.example.com 去比对 Gateway 资源中定义的 servers 列表。
-    - 它发现：`hosts: ["api.example.com"]` 这一项匹配成功。
+    - Envoy 拿着 api.dummy.com 去比对 Gateway 资源中定义的 servers 列表。
+    - 它发现：`hosts: ["api.dummy.com"]` 这一项匹配成功。
     - 它查看该项配置：credentialName: api-tls-secret。
     - Envoy 从内存或 K8s Secret 中加载对应的证书和私钥。
 5. 发送 Server Hello（加密开始）：
@@ -141,9 +141,9 @@ TLS 握手的特殊阶段（Client Hello）：
 既然可以用通配符证书解决所有问题，为什么 Istio 的设计允许（甚至鼓励在某些场景下使用）多个 credentialName？
 
 1. 安全隔离（最小权限原则）：
-    - 如果 api.example.com 处理敏感金融数据，而 blog.example.com 只是公开文章。
+    - 如果 api.dummy.com 处理敏感金融数据，而 blog.dummy.com 只是公开文章。
     - 使用独立证书意味着：如果 blog 的私钥被黑客窃取，api 的通信依然安全，黑客无法冒充 api 域名。
-    - 如果使用通配符证书，blog 私钥泄露等于整个 *.example.com 沦陷。
+    - 如果使用通配符证书，blog 私钥泄露等于整个 *.dummy.com 沦陷。
 
 2. 证书来源多样性：
     - 某些域名可能使用 Let's Encrypt 自动续期。
@@ -155,7 +155,7 @@ TLS 握手的特殊阶段（Client Hello）：
     - 不同业务的证书过期时间可能不同。独立证书允许你单独更新某个域名的 Secret，而不影响其他域名的服务（避免全量重启或配置重载风险）。
 
 4. 部分通配符的限制：
-    - 你可能有 *.dev.example.com 的证书，但没有 *.prod.example.com 的证书。
+    - 你可能有 *.dev.dummy.com 的证书，但没有 *.prod.dummy.com 的证书。
     - 这时你必须为 dev 环境用一个证书，为 prod 环境用另一个证书，并在 Gateway 中通过 SNI 区分它们。
 
 图解流程
@@ -168,13 +168,13 @@ TLS 握手的特殊阶段（Client Hello）：
        |---------------------------------------->|
        |                                         |
        | 2. TLS Client Hello                     |
-       |    (包含 SNI: "api.example.com")        |
+       |    (包含 SNI: "api.dummy.com")        |
        |    *** 此时是明文，未加密 ***           |
        |---------------------------------------->|
        |                                         |
-       |                                         | 3. 解析 SNI: "api.example.com"
+       |                                         | 3. 解析 SNI: "api.dummy.com"
        |                                         | 4. 查找 Gateway 配置:
-       |                                         |    Match: hosts=["api.example.com"]
+       |                                         |    Match: hosts=["api.dummy.com"]
        |                                         |    Action: Load cert from "api-tls-secret"
        |                                         |
        | 5. TLS Server Hello                     |
@@ -204,8 +204,8 @@ SNI 如何应用？ 利用 TLS 握手初期（Client Hello）的明文特性，E
 
 场景设定
 假设你有两个业务域名：
-api.example.com
-www.example.com
+api.dummy.com
+www.dummy.com
 
 你需要让它们都能通过 HTTPS (443 端口) 对外提供服务。
 
@@ -214,8 +214,8 @@ www.example.com
 - 困境：服务器在收到加密请求的瞬间，还不知道客户端想访问哪个域名（因为域名信息在加密层之后，或者根本没传）。
 - 服务器的困惑：服务器只有一个 IP，但有两个不同的证书（`api` 的证书和 `www` 的证书）。它不知道该拿出哪张证书来建立连接。如果拿错了，浏览器会报“证书不匹配”的安全警告。
 - 唯一的解决方案：物理隔离。
-    - 你必须给 `api.example.com` 分配一个独立的 IP 地址（例如 `1.1.1.1`），并在该 IP 的 443 端口绑定 api 的证书。
-    - 你必须给 `www.example.com` 分配另一个独立的 IP 地址（例如 `2.2.2.2`），并在该 IP 的 443 端口绑定 www 的证书。
+    - 你必须给 `api.dummy.com` 分配一个独立的 IP 地址（例如 `1.1.1.1`），并在该 IP 的 443 端口绑定 api 的证书。
+    - 你必须给 `www.dummy.com` 分配另一个独立的 IP 地址（例如 `2.2.2.2`），并在该 IP 的 443 端口绑定 www 的证书。
 
 结果：
 - IP 消耗：2 个公网 IP。
@@ -224,14 +224,14 @@ www.example.com
 
 ```
 [无 SNI 架构]
-IP: 1.1.1.1 :443 --> 只能服务于 api.example.com (证书 A)
-IP: 2.2.2.2 :443 --> 只能服务于 www.example.com (证书 B)
+IP: 1.1.1.1 :443 --> 只能服务于 api.dummy.com (证书 A)
+IP: 2.2.2.2 :443 --> 只能服务于 www.dummy.com (证书 B)
 (必须为每个域名买一个 IP)
 ```
 
 情况 B：使用 SNI (现代/Istio 默认)
 
-有了 SNI，客户端在握手的第一步（Client Hello）就大声喊出了：“我要去 `api.example.com`！”
+有了 SNI，客户端在握手的第一步（Client Hello）就大声喊出了：“我要去 `api.dummy.com`！”
 
 - 工作流程：
     1. Istio Gateway 只需要一个公网 IP（例如 1.1.1.1）。
@@ -264,11 +264,11 @@ spec:
   servers:
   port:
       number: 443       #  监听 1.1.1.1:443
-www.example.com -> 监听 1.1.1.1:444 (被迫换端口)
-blog.example.com -> 监听 1.1.1.1:445 (再换端口)
+www.dummy.com -> 监听 1.1.1.1:444 (被迫换端口)
+blog.dummy.com -> 监听 1.1.1.1:445 (再换端口)
 ```
 
-这就叫“增加了额外的端口”。用户访问时必须显式指定端口（如 https://www.example.com:444），这既不安全（暴露非标准端口），用户体验也极差，且容易被防火墙拦截。
+这就叫“增加了额外的端口”。用户访问时必须显式指定端口（如 https://www.dummy.com:444），这既不安全（暴露非标准端口），用户体验也极差，且容易被防火墙拦截。
 
 结论
 
@@ -276,7 +276,7 @@ blog.example.com -> 监听 1.1.1.1:445 (再换端口)
 利用 SNI 技术，Istio Gateway 可以在单一网卡 IP 和 标准 443 端口 上，通过软件逻辑（读取 SNI 字段）无限扩展支持的域名数量，而无需向云厂商购买更多 IP 地址，也无需让用户访问奇怪的端口号。
 
 
-#### 在这个消息中，包含了一个扩展字段叫 SNI (Server Name Indication)，里面明文写着客户端想访问的域名（例如 api.example.com）。  也就是说客户端访问时候 会明文写着其想要访问的域名 对吗？
+#### 在这个消息中，包含了一个扩展字段叫 SNI (Server Name Indication)，里面明文写着客户端想访问的域名（例如 api.dummy.com）。  也就是说客户端访问时候 会明文写着其想要访问的域名 对吗？
 
 是的，完全正确。
 
@@ -290,7 +290,7 @@ blog.example.com -> 监听 1.1.1.1:445 (再换端口)
     Istio Gateway (Envoy)：它必须能看到这个明文，才能决定用哪张证书来回应你。
 
 什么被暴露了？
-    暴露的是：你想要访问的具体域名（例如 api.example.com 或 www.google.com）。
+    暴露的是：你想要访问的具体域名（例如 api.dummy.com 或 www.google.com）。
     没有暴露的是：具体的 URL 路径（如 /users/123）、查询参数、Cookie、HTTP Header 以及请求体内容。这些内容在 TLS 握手完成后才会发送，那时已经是加密状态了。
 
 为什么设计成明文？（逻辑死循环）
@@ -305,9 +305,9 @@ blog.example.com -> 监听 1.1.1.1:445 (再换端口)
 虽然具体的页面内容（如你看了什么文章、提交了什么表单）是安全的，但你的访问意图（去了哪个网站）是泄露的。
 
 场景举例：
-    如果你访问 https://medical-advice.example.com/cancer-treatment。
+    如果你访问 https://medical-advice.dummy.com/cancer-treatment。
     网络监听者看不到 /cancer-treatment 这部分（这是加密的）。
-    但监听者清楚地看到你连接了 medical-advice.example.com。这就足以推断你可能在寻求医疗帮助。
+    但监听者清楚地看到你连接了 medical-advice.dummy.com。这就足以推断你可能在寻求医疗帮助。
 
 有没有解决方案？（ESNI / ECH）
 
@@ -394,7 +394,7 @@ spec:
       name: tls-passthrough
       protocol: TLS # 注意这里是 TLS 而不是 HTTPS
     hosts:
-    "secure-db.example.com"
+    "secure-db.dummy.com"
     tls:
       mode: PASSTHROUGH # 关键配置：开启透传
 
@@ -405,14 +405,14 @@ metadata:
   namespace: default
 spec:
   hosts:
-  "secure-db.example.com"
+  "secure-db.dummy.com"
   gateways:
   istio-system/tcp-passthrough-gateway
   tcp: # 注意这里使用 tcp 路由规则，而不是 http
   match:
     port: 443
       sniHosts:
-      "secure-db.example.com" # 必须指定 SNI 匹配，否则不知道转发给谁
+      "secure-db.dummy.com" # 必须指定 SNI 匹配，否则不知道转发给谁
     route:
     destination:
         host: my-secure-db-service
