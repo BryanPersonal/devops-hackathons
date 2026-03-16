@@ -13,7 +13,7 @@ SNI 是 TLS 协议的一个扩展。在标准的 TLS 握手过程中，客户端
 - 没有 SNI 时：服务器必须在握手开始前就知道使用哪个证书，因此一个 IP:Port 只能对应一个域名/证书。
 - 有 SNI 时：服务器（Istio Gateway/Envoy）读取 Client Hello 中的主机名，动态选择匹配的 TLS 证书进行握手，并将后续流量路由到对应的 VirtualService。
 
-Is2. tio Gateway 中的 SNI 工作原理
+2. Istio Gateway 中的 SNI 工作原理
 在 Istio 架构中，Gateway 资源定义了负载均衡器的监听器配置。当配置了 HTTPS 或 TLS 模式时，SNI 发挥着核心作用：
 
 - 监听配置：你在 Gateway 的 servers 列表中定义多个服务器块，它们可以监听相同的端口（如 443），但绑定不同的 hosts（域名）。
@@ -268,7 +268,7 @@ www.dummy.com -> 监听 1.1.1.1:444 (被迫换端口)
 blog.dummy.com -> 监听 1.1.1.1:445 (再换端口)
 ```
 
-这就叫“增加了额外的端口”。用户访问时必须显式指定端口（如 https://www.dummy.com:444），这既不安全（暴露非标准端口），用户体验也极差，且容易被防火墙拦截。
+这就叫“增加了额外的端口”。用户访问时必须显式指定端口（如 `https://www.dummy.com:444`），这既不安全（暴露非标准端口），用户体验也极差，且容易被防火墙拦截。
 
 结论
 
