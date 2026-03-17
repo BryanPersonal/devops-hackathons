@@ -150,11 +150,11 @@ func main() {
 
 ```mermaid
 graph LR
-    A[rest.Config] -->|作为输入| B[kubernetes.NewForConfig]
-    B --> C[Clientset]
-    C --> D[CoreV1().Pods()]
-    C --> E[AppsV1().Deployments()]
-    C --> F[RbacV1().Roles()]
+    A["rest.Config"] -->|作为输入| B["kubernetes.NewForConfig"]
+    B --> C["Clientset"]
+    C --> D["CoreV1().Pods()"]
+    C --> E["AppsV1().Deployments()"]
+    C --> F["RbacV1().Roles()"]
 ```
 
 - 先通过 rest 包（或 clientcmd）获得 *rest.Config
