@@ -40,3 +40,19 @@
   border-radius: 8px;
   background: var(--ifm-background-surface-color);
 }
+
+.postLikeButton {
+  margin-top: 0.25rem;
+  border: 1px solid var(--ifm-color-primary);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+}
+
+.postLikeButton:hover {
+  background: var(--ifm-color-primary);
+  color: #fff;
+}
