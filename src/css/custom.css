@@ -32,3 +32,11 @@
 .blogPostGiscus {
   margin-top: 2rem;
 }
+
+.postEngagement {
+  margin-top: 2rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+}
