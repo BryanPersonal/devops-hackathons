@@ -1,0 +1,1 @@
+https://obs.cia.net.sap/repos/_pkglists/SLES15-SP7.txt

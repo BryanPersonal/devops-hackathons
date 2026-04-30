@@ -19,3 +19,19 @@ tcpdump -nn -r capture.pcap | less
 | Flags \[.]  | ACK，确认               |
 | Flags \[F.] | FIN+ACK，连接断开请求       |
 | Flags \[R.] | RST+ACK，复位连接，拒绝连接或异常 |
+
+```
+ping -M do -s 1472 <target>
+📦 为什么是 1472？
+IP Header     = 20 bytes
+ICMP Header   = 8 bytes
+-------------------------
+总开销        = 28 bytes
+
+👉 1472 + 28(IP+ICMP) = 1500
+
+逐步减小：
+
+ping -M do -s 1400 <target>
+如果失败的话: Frag needed and DF set ??
+```

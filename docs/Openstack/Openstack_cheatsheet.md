@@ -83,6 +83,9 @@ openstack loadbalancer pool show 77c347bc-be33-4bbf-86e9-df61f26c2072 -f json |j
 // unset load balancer session-persistence
 openstack loadbalancer pool unset --session-persistence 4f82382c-cd42-45fd-b541-2b5bf03fcd6e
 
+// 
+openstack port list --device-owner network:f5selfip
+
 // set load balancer session-persistence back
 openstack loadbalancer pool set --session-persistence=  "type=SOURCE_IP" 4f82382c-cd42-45fd-b541-2b5bf03fcd6e
 

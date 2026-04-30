@@ -120,3 +120,20 @@ Linux 启动文字流程图
 1. 系统总线（System Bus）
 2. 会话总线（Session Bus） 
 
+### CLI
+
+```
+查看其支持的模块
+dracut --list-modules
+
+# file /boot/initrd-6.4.0-150700.53.31-default
+/boot/initrd-6.4.0-150700.53.31-default: ASCII cpio archive (SVR4 with no CRC)
+
+# 查看当前 initramfs 中包含的内容
+lsinitrd /boot/initramfs-$(uname -r).img
+
+# (FIXME 哪些情况需要)强制重新生成当前内核的 initramfs ？？
+sudo dracut -f
+
+```
+

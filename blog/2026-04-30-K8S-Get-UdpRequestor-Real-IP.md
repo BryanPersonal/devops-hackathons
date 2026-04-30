@@ -1,0 +1,27 @@
+---
+slug: To-Get-Real-SourceIP-InPod
+title: To-Get-Real-SourceIP-InPod
+authors:
+  name: Bryan Chen
+  title: Docusaurus Core Team
+  url: https://github.com/BryanPersonal
+  image_url: https://github.com/wgao19.png
+tags: [hola, docusaurus]
+---
+
+Preserving the client source IP a critical aspect when decommissioning a service running on a traditional VM. The decommissioning process is typically carried out in several phases:
+1. Notify stakeholders in advance and request them to stop using the service
+2. Monitor incoming traffic to the service
+3. Identify any remaining client source IPs still accessing the service and proactively reach out to those users.
+4. Shut down the service for a grace period (e.g., two weeks) to ensure no dependencies remain.
+5. Fully decommission the service
+
+Typically, software provides its own mechanisms to capture and log the client's source IP address - for example, BIND and 389 Directory Server both include native capabilities to record client connection details. From a technical pespectives, this works across several layers:
+1. Transport / socket layer (L3/L4)
+At the lowest lower, the application obtains the client IP from TCP/UDP socket. When a client connects, the kernel exposes the peer address via system calls like `accept()` (TCP) or `recvfrom()`(UDP). 
+- In DNS (BIND), each query arrives over UDP or TCP, and the service logs the source IP directly from the packet metadata.
+- In LDAP (389ds), the server retrieves the client IP from the established TCP session.
+
+> Those approaches are most reliable, as long as the source IP remains unmodified by intermediate systems. In reality, however, this is rarely possible due to pervasive NAT.
+
+https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip

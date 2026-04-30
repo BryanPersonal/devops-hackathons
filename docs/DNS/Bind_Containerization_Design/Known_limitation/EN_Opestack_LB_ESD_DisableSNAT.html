@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="CIA Plato Agent">
+  <meta name="date" content="2026-03-28T01:57:23.914Z">
+  <title>Plato Response</title>
+  <style>
+
+      /* Base styles */
+      :root {
+        --sapBrandColor: #1661BE;
+        --sapTextColor: #333;
+        --sapContent_LabelColor: #6b7280;
+        --sapTile_Background: #f8f9fa;
+        --sapTile_BorderColor: #e5e7eb;
+        --sapPositiveColor: #107e3e;
+        --sapNegativeColor: #b00;
+        --sapInformativeColor: #1661BE;
+        --sapCriticalColor: #e9730c;
+        --sapField_Background: #f5f5f5;
+        --sapBackgroundColor: #fafafa;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        line-height: 1.6;
+        color: var(--sapTextColor);
+        background: #fff;
+        margin: 0;
+        padding: 2rem;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      /* Typography */
+      h1, h2, h3, h4, h5, h6 {
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+
+      h1 { font-size: 2em; border-bottom: 1px solid var(--sapTile_BorderColor); padding-bottom: 0.3em; }
+      h2 { font-size: 1.5em; border-bottom: 1px solid var(--sapTile_BorderColor); padding-bottom: 0.3em; }
+      h3 { font-size: 1.25em; }
+      h4 { font-size: 1em; }
+
+      p {
+        margin: 1em 0;
+      }
+
+      a {
+        color: var(--sapBrandColor);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      /* Lists */
+      ul, ol {
+        padding-left: 2em;
+        margin: 1em 0;
+      }
+
+      li {
+        margin: 0.25em 0;
+      }
+
+      /* Code */
+      code {
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+        font-size: 0.9em;
+        background: var(--sapField_Background);
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+      }
+
+      pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        margin: 0;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Liberation Mono', monospace;
+        font-size: 0.85em;
+        line-height: 1.5;
+      }
+
+      pre code {
+        background: transparent;
+        padding: 0;
+        font-size: inherit;
+        color: inherit;
+        font-family: inherit;
+      }
+
+      /* Exported code block container */
+      .code-block-export {
+        margin: 1em 0;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        background: #1e1e1e;
+      }
+
+      .code-block-export-header {
+        background: #2d2d2d;
+        color: #a0a0a0;
+        padding: 0.4rem 1rem;
+        font-size: 0.75em;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        border-bottom: 1px solid #3a3a3a;
+        text-transform: lowercase;
+      }
+
+      .code-block-export pre {
+        margin: 0;
+        border-radius: 0;
+      }
+
+      /* Tables */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1em 0;
+      }
+
+      th, td {
+        border: 1px solid var(--sapTile_BorderColor);
+        padding: 0.5rem 1rem;
+        text-align: left;
+      }
+
+      th {
+        background: var(--sapTile_Background);
+        font-weight: 600;
+      }
+
+      tr:nth-child(even) {
+        background: var(--sapBackgroundColor);
+      }
+
+      /* Exclude code tables from data-table styling */
+      .code-block-export table,
+      .code-table {
+        border: none;
+        width: auto;
+        margin: 0;
+      }
+
+      .code-block-export th,
+      .code-block-export td,
+      .code-table th,
+      .code-table td {
+        border: none;
+        padding: 0;
+        background: transparent;
+      }
+
+      .code-table tr:nth-child(even),
+      .code-block-export tr:nth-child(even) {
+        background: transparent;
+      }
+
+      /* Blockquotes */
+      blockquote {
+        margin: 1em 0;
+        padding: 0.5em 1em;
+        border-left: 4px solid var(--sapBrandColor);
+        background: var(--sapTile_Background);
+        color: var(--sapContent_LabelColor);
+      }
+
+      blockquote p {
+        margin: 0.5em 0;
+      }
+
+      /* Images */
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.375rem;
+      }
+
+      /* Diagrams (Mermaid, Vega) */
+      .mermaid-diagram, .vega-container, .vega-chart {
+        text-align: center;
+        padding: 1em;
+        background: var(--sapTile_Background);
+        border-radius: 0.375rem;
+        border: 1px solid var(--sapTile_BorderColor);
+        margin: 1em 0;
+      }
+
+      .mermaid-diagram svg, .vega-container svg, .vega-chart svg {
+        max-width: 100%;
+        height: auto;
+      }
+
+      /* Hide Vega action buttons in export */
+      .vega-embed details,
+      .vega-embed summary,
+      .vega-actions,
+      .vega-embed .vega-actions-wrapper,
+      .vega-embed > details {
+        display: none !important;
+      }
+
+      /* Hide any remaining placeholders */
+      .vega-placeholder,
+      .mermaid-placeholder,
+      .lazy-placeholder,
+      [class*="-placeholder"] {
+        display: none !important;
+      }
+
+      /* Alerts/Callouts */
+      .alert, .callout, [class*="alert-"] {
+        padding: 1rem;
+        border-radius: 0.375rem;
+        margin: 1em 0;
+        border-left: 4px solid;
+      }
+
+      .alert-info, .callout-info {
+        background: rgba(22, 97, 190, 0.1);
+        border-color: var(--sapInformativeColor);
+      }
+
+      .alert-warning, .callout-warning {
+        background: rgba(233, 115, 12, 0.1);
+        border-color: var(--sapCriticalColor);
+      }
+
+      .alert-danger, .callout-danger, .alert-error {
+        background: rgba(187, 0, 0, 0.1);
+        border-color: var(--sapNegativeColor);
+      }
+
+      .alert-success, .callout-success {
+        background: rgba(16, 126, 62, 0.1);
+        border-color: var(--sapPositiveColor);
+      }
+
+      /* Horizontal rule */
+      hr {
+        border: none;
+        border-top: 1px solid var(--sapTile_BorderColor);
+        margin: 2em 0;
+      }
+
+      /* KaTeX math */
+      .katex {
+        font-size: 1.1em;
+      }
+
+      .katex-display {
+        overflow-x: auto;
+        padding: 0.5em 0;
+      }
+
+      /* Syntax highlighting - VS Code Dark+ theme */
+      .hljs-keyword,
+      .hljs-selector-tag,
+      .hljs-literal,
+      .hljs-section { color: #569cd6; }
+
+      .hljs-string,
+      .hljs-attr,
+      .hljs-template-variable,
+      .hljs-addition { color: #ce9178; }
+
+      .hljs-number,
+      .hljs-symbol { color: #b5cea8; }
+
+      .hljs-comment,
+      .hljs-quote,
+      .hljs-deletion { color: #6a9955; font-style: italic; }
+
+      .hljs-function .hljs-keyword { color: #569cd6; }
+      
+      .hljs-title,
+      .hljs-title.function_ { color: #dcdcaa; }
+
+      .hljs-type,
+      .hljs-built_in,
+      .hljs-class .hljs-title { color: #4ec9b0; }
+
+      .hljs-variable,
+      .hljs-name { color: #9cdcfe; }
+
+      .hljs-operator { color: #d4d4d4; }
+      .hljs-punctuation { color: #d4d4d4; }
+
+      .hljs-meta { color: #569cd6; }
+      .hljs-meta .hljs-string { color: #ce9178; }
+      
+      .hljs-regexp { color: #d16969; }
+      
+      .hljs-attribute { color: #9cdcfe; }
+
+      .hljs-tag { color: #808080; }
+      .hljs-tag .hljs-name { color: #569cd6; }
+      .hljs-tag .hljs-attr { color: #9cdcfe; }
+
+      .hljs-selector-class { color: #d7ba7d; }
+      .hljs-selector-id { color: #d7ba7d; }
+
+      .hljs-params { color: #d4d4d4; }
+
+      .hljs-property { color: #9cdcfe; }
+
+      .hljs-emphasis { font-style: italic; }
+      .hljs-strong { font-weight: bold; }
+
+      /* Footer */
+      .export-footer {
+        margin-top: 3rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--sapTile_BorderColor);
+        font-size: 0.8rem;
+        color: var(--sapContent_LabelColor);
+        text-align: center;
+      }
+
+      /* Print styles */
+      @media print {
+        body {
+          padding: 0;
+          max-width: none;
+        }
+
+        pre {
+          white-space: pre-wrap;
+          word-wrap: break-word;
+        }
+
+        a {
+          text-decoration: none;
+        }
+
+        .export-footer {
+          display: none;
+        }
+      }
+    
+
+  </style>
+</head>
+<body>
+  <article class="plato-response">
+<!----><div class="text-block-item"><div class="text-block-content"><div class="markdown-container"><div class="markdown-tokens"><h2 class="markdown-heading markdown-heading--2" id="yes-ccloud_special_l4_deactivate_snat-requires-iptables-rules-for-dig-to-work"><span class="markdown-inline-tokens"><span class="text-token">Yes, </span><code class="codespan-token" title="Click to copy">ccloud_special_l4_deactivate_snat <!----></code><span class="text-token"> Requires iptables Rules for </span><code class="codespan-token" title="Click to copy">dig <!----></code><span class="text-token"> to Work</span></span></h2><p class="markdown-paragraph"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">Configuring the tag alone only completes the "first half" of DSR (LB stops performing SNAT). The "second half" (ensuring response packets return correctly to the client) depends entirely on iptables + routing rules on the Worker nodes.</span></span></strong><span class="text-token"> Without these rules, DNS responses are either lost or rejected by the client -- which is exactly why your </span><code class="codespan-token" title="Click to copy">dig <!----></code><span class="text-token"> times out.</span></span></p><hr class="markdown-hr"><h3 class="markdown-heading markdown-heading--3" id="why-dig-needs-iptables"><span class="markdown-inline-tokens"><span class="text-token">Why </span><code class="codespan-token" title="Click to copy">dig <!----></code><span class="text-token"> Needs iptables</span></span></h3><p class="markdown-paragraph"><span class="markdown-inline-tokens"><span class="text-token">In normal mode (with SNAT), the LB proxies traffic end-to-end, and the backend needs no special configuration. Once SNAT is disabled (DSR enabled), the response path changes completely. The Worker node must solve three problems on its own:</span></span></p><div class="table-renderer"><div class="table-wrapper"><table class="markdown-table"><thead><tr><th class="table-header-cell"><span class="markdown-inline-tokens"><span class="text-token">Problem</span></span><span class="resize-handle"></span></th><th class="table-header-cell"><span class="markdown-inline-tokens"><span class="text-token">What Happens Without iptables</span></span><span class="resize-handle"></span></th><th class="table-header-cell"><span class="markdown-inline-tokens"><span class="text-token">Corresponding Rule</span></span><span class="resize-handle"></span></th></tr></thead><tbody><tr class="table-row"><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">conntrack interference</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">Kernel automatically reverse-NATs the response, overriding your custom SNAT</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><code class="codespan-token" title="Click to copy">raw/PREROUTING <!----></code><span class="text-token"> → </span><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">NOTRACK</span></span></strong></span></td></tr><tr class="table-row"><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">Response packet routing</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">Takes default route directly to client, bypassing F5; client receives response with source IP ≠ LB VIP and drops it</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><code class="codespan-token" title="Click to copy">mangle/PREROUTING <!----></code><span class="text-token"> → </span><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">MARK 0x1</span></span></strong><span class="text-token"> + routing table 100</span></span></td></tr><tr class="table-row"><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">Source IP:Port matching</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">F5 cannot correlate the response to its session table</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><code class="codespan-token" title="Click to copy">nat/POSTROUTING <!----></code><span class="text-token"> → </span><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">SNAT</span></span></strong><span class="text-token"> to </span><code class="codespan-token" title="Click to copy">NODE_IP:NODEPORT <!----></code></span></td></tr></tbody></table></div><!----></div><hr class="markdown-hr"><h3 class="markdown-heading markdown-heading--3" id="the-three-iptables-rules-from-entrypointsh"><span class="markdown-inline-tokens"><span class="text-token">The Three iptables Rules (from entrypoint.sh)</span></span></h3><p class="markdown-paragraph"><span class="markdown-inline-tokens"><span class="text-token">The S4 DNS View auto-configuration in </span><span class="link-token-wrapper link-token--external"><a href="https://github.tools.sap/cia-docker-images/k8s-cust-node/blob/main/entrypoints/Fountain/entrypoint.sh" target="_blank" rel="noopener noreferrer">entrypoint.sh </a><span aria-hidden="true"> ↗</span></span><span class="text-token"> (L229-402) creates three iptables rules and one route:</span></span></p><h4 class="markdown-heading markdown-heading--4" id="rule-1-disable-connection-tracking-l339-350"><span class="markdown-inline-tokens"><span class="text-token">Rule 1: Disable Connection Tracking (L339-350)</span></span></h4><div class="code-block-export"><div class="code-block-export-header">Bash</div><pre><code class="hljs language-bash">iptables -t raw -A PREROUTING -p udp -d 100.64.0.0/12 --dport 53 \
+    -j NOTRACK -m comment --comment <span class="hljs-string">"S4_DNSVIEW_CC"</span></code></pre></div><p class="markdown-paragraph"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">Purpose</span></span></strong><span class="text-token">: Skip conntrack for UDP packets destined to the Pod subnet (</span><code class="codespan-token" title="Click to copy">100.64.0.0/12 <!----></code><span class="text-token">) on port 53. Without this, the kernel automatically reverse-NATs response packets, overriding your custom SNAT rule below.</span></span></p><h4 class="markdown-heading markdown-heading--4" id="rule-2-mark-response-packets-l352-364"><span class="markdown-inline-tokens"><span class="text-token">Rule 2: Mark Response Packets (L352-364)</span></span></h4><div class="code-block-export"><div class="code-block-export-header">Bash</div><pre><code class="hljs language-bash">iptables -t mangle -A PREROUTING -p udp -s 100.64.0.0/12 --sport 53 \
+    ! -d 100.64.0.0/12 \
+    -j MARK --set-mark 1 -m comment --comment <span class="hljs-string">"S4_DNSVIEW_CC"</span></code></pre></div><p class="markdown-paragraph"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">Purpose</span></span></strong><span class="text-token">: Tag DNS responses coming from Pods (source port 53, destination outside Pod subnet) with fwmark </span><code class="codespan-token" title="Click to copy">0x1 <!----></code><span class="text-token">, forcing them into </span><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">routing table 100</span></span></strong><span class="text-token"> instead of the default route.</span></span></p><h4 class="markdown-heading markdown-heading--4" id="routing-table-100-force-responses-through-f5-l289-311"><span class="markdown-inline-tokens"><span class="text-token">Routing Table 100: Force Responses Through F5 (L289-311)</span></span></h4><div class="code-block-export"><div class="code-block-export-header">Bash</div><pre><code class="hljs language-bash">ip rule add fwmark 0x1 lookup 100
+ip route replace default via &lt;LB_VIP&gt; dev &lt;interface&gt; table 100</code></pre></div><p class="markdown-paragraph"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">Purpose</span></span></strong><span class="text-token">: Marked response packets use routing table 100, whose default gateway points to the LB VIP. This ensures responses </span><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">must pass through F5</span></span></strong><span class="text-token">, which rewrites the source IP back to the LB VIP before delivering to the client.</span></span></p><h4 class="markdown-heading markdown-heading--4" id="rule-3-snat-source-address-l366-378"><span class="markdown-inline-tokens"><span class="text-token">Rule 3: SNAT Source Address (L366-378)</span></span></h4><div class="code-block-export"><div class="code-block-export-header">Bash</div><pre><code class="hljs language-bash">iptables -t nat -A POSTROUTING -p udp -s 100.64.0.0/12 --sport 53 \
+    ! -d 100.64.0.0/12 \
+    -j SNAT --to-source &lt;NODE_IP&gt;:&lt;NODEPORT&gt; -m comment --comment <span class="hljs-string">"S4_DNSVIEW_CC"</span></code></pre></div><p class="markdown-paragraph"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">Purpose</span></span></strong><span class="text-token">: Rewrite the response source from </span><code class="codespan-token" title="Click to copy">POD_IP:53 <!----></code><span class="text-token"> to </span><code class="codespan-token" title="Click to copy">NODE_IP:NODEPORT <!----></code><span class="text-token">, so F5 can match it against its session table (F5 records the backend as </span><code class="codespan-token" title="Click to copy">NODE_IP:NODEPORT <!----></code><span class="text-token">, not the Pod IP).</span></span></p><hr class="markdown-hr"><h3 class="markdown-heading markdown-heading--3" id="complete-packet-flow"><span class="markdown-inline-tokens"><span class="text-token">Complete Packet Flow</span></span></h3><div class="code-block-export"><div class="code-block-export-header">plaintext</div><pre><code class="hljs language-plaintext">DNS Query (Inbound):<span class="hljs-built_in"></span>
+<span class="hljs-built_in">Client </span>──[<span class="hljs-attribute">dst</span>=LB_VIP:53]──&gt; F5(DSR) ──[<span class="hljs-attribute">dst</span>=NODE:NODEPORT, <span class="hljs-attribute">src</span>=CLIENT_IP]──&gt; Worker
+&nbsp;
+Worker Node Processing:
+  raw/PREROUTING  → NOTRACK (skip conntrack)
+  kube-proxy DNAT → Forward NodePort <span class="hljs-keyword">to</span> Pod
+  Pod processes<span class="hljs-built_in"> DNS </span>query → Generates response
+<span class="hljs-built_in"></span>
+<span class="hljs-built_in">DNS </span>Response (Outbound):
+  mangle/PREROUTING → MARK 0x1 (tag response packet)
+ <span class="hljs-built_in"> Routing </span>decision  → fwmark 0x1 → lookup table 100 → gateway = LB_VIP
+  nat/POSTROUTING   → SNAT src <span class="hljs-keyword">to</span> NODE_IP:NODEPORT
+  Worker ──[<span class="hljs-attribute">src</span>=NODE:NODEPORT, <span class="hljs-attribute">dst</span>=CLIENT_IP]──&gt; F5 ──[src rewritten <span class="hljs-keyword">to</span> LB_VIP:53]──&gt; Client</code></pre></div><p class="markdown-paragraph"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">If any one of these rules is missing</span></span></strong><span class="text-token">, response packets either take the wrong path, have a mismatched source IP, or get corrupted by conntrack -- all resulting in </span><code class="codespan-token" title="Click to copy">dig <!----></code><span class="text-token"> timeout.</span></span></p><hr class="markdown-hr"><h3 class="markdown-heading markdown-heading--3" id="what-you-need-to-do"><span class="markdown-inline-tokens"><span class="text-token">What You Need to Do</span></span></h3><p class="markdown-paragraph"><span class="markdown-inline-tokens"><span class="text-token">Deploy the </span><span class="link-token-wrapper link-token--external"><a href="https://github.tools.sap/cia-helm-charts/k8s-cust-node" target="_blank" rel="noopener noreferrer">k8s-cust-node </a><span aria-hidden="true"> ↗</span></span><span class="text-token"> Helm Chart as a DaemonSet, with correct parameters in the ConfigMap:</span></span></p><ul class="markdown-list markdown-list--unordered"><li class="markdown-list-item"><!----><span class="markdown-list-item-content"><span class="markdown-inline-tokens"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">Automatic mode</span></span></strong><span class="text-token"> (for DNS scenarios): Set </span><code class="codespan-token" title="Click to copy">S4_DNSVIEW_SCI_AUTO_CONFIG=true <!----></code><span class="text-token"> -- the script auto-discovers the LoadBalancer IP, NodePort, and node IP, then creates all rules automatically</span></span></span></span><!----></li><li class="markdown-list-item"><!----><span class="markdown-list-item-content"><span class="markdown-inline-tokens"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">Manual mode</span></span></strong><span class="text-token">: Define the three rules and route explicitly in the </span><code class="codespan-token" title="Click to copy">iptables-cm <!----></code><span class="text-token"> and </span><code class="codespan-token" title="Click to copy">routetab-cm <!----></code><span class="text-token"> ConfigMaps</span></span></span></span><!----></li></ul><p class="markdown-paragraph"><span class="markdown-inline-tokens"><span class="text-token">Once deployed, the initContainer applies these rules on every Worker node. After that, </span><code class="codespan-token" title="Click to copy">dig <!----></code><span class="text-token"> will work correctly.</span></span></p><hr class="markdown-hr"><h3 class="markdown-heading markdown-heading--3" id="summary"><span class="markdown-inline-tokens"><span class="text-token">Summary</span></span></h3><div class="table-renderer"><div class="table-wrapper"><table class="markdown-table"><thead><tr><th class="table-header-cell"><span class="markdown-inline-tokens"><span class="text-token">Component</span></span><span class="resize-handle"></span></th><th class="table-header-cell"><span class="markdown-inline-tokens"><span class="text-token">Role</span></span><span class="resize-handle"></span></th><th class="table-header-cell"><span class="markdown-inline-tokens"><span class="text-token">Without It</span></span><span class="resize-handle"></span></th></tr></thead><tbody><tr class="table-row"><td class="table-cell"><span class="markdown-inline-tokens"><code class="codespan-token" title="Click to copy">ccloud_special_l4_deactivate_snat <!----></code><span class="text-token"> (LB tag)</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">Disables SNAT on the LB Listener</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">LB still does full-proxy, no DSR</span></span></td></tr><tr class="table-row"><td class="table-cell"><span class="markdown-inline-tokens"><code class="codespan-token" title="Click to copy">raw/PREROUTING → NOTRACK <!----></code></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">Prevents conntrack from interfering</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">Kernel reverse-NATs responses, breaking custom SNAT</span></span></td></tr><tr class="table-row"><td class="table-cell"><span class="markdown-inline-tokens"><code class="codespan-token" title="Click to copy">mangle/PREROUTING → MARK <!----></code></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">Routes responses through F5 via table 100</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">Responses take default route, bypassing F5; source IP mismatch</span></span></td></tr><tr class="table-row"><td class="table-cell"><span class="markdown-inline-tokens"><code class="codespan-token" title="Click to copy">nat/POSTROUTING → SNAT <!----></code></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">Rewrites source to NODE_IP:NODEPORT</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">F5 cannot match responses to its session table</span></span></td></tr><tr class="table-row"><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">Routing table 100</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">Default gateway = LB VIP</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">Marked packets have no valid route</span></span></td></tr></tbody></table></div><!----></div><p class="markdown-paragraph"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">The tag and the iptables rules are two halves of one mechanism.</span></span></strong><span class="text-token"> Neither works without the other.</span></span></p></div></div></div></div>
+  </article>
+  <footer class="export-footer">
+    <p>Generated by CIA Plato Agent on 3/28/2026, 9:57:23 AM</p>
+  </footer>
+</body>
+</html>

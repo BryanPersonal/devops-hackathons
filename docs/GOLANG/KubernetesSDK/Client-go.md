@@ -56,7 +56,7 @@ for _, pod := range pods.Items {
   - API Server 地址(Host)
   - TLS配置（CA 证书、 客户端证书/密钥 或 Token）
   - 身份认证方式（Bearer Token、 TLS Client Cert、 Exec Plugin等）
-  - 超时、 QPS限流、 内容类型（如 Protobuf/JSON）等网络参数
+  - FIXME: 超时、 QPS限流、 内容类型（如 Protobuf/JSON）等网络参数
 
 关键函数
 - `rest.InClusterConfig()`: 自动从Pod内部获取ServiceAccount Token 和 CA，构建集群内配置。
@@ -136,6 +136,7 @@ func main() {
 
 ---
 
+
 ### 对比：集群外使用
 
 在本地开发时，通常使用 `clientcmd.BuildConfigFromFlags("", kubeconfigPath)` 来加载 `~/.kube/config` 文件。而 `InClusterConfig()` 是其“集群内版本”，专为 Pod 设计，更安全、更自动化。
@@ -161,3 +162,4 @@ graph LR
 - 将该 config 传给 kubernetes.NewForConfig()
 - 得到 *kubernetes.Clientset
 - 通过 clientset 调用具体资源的操作（Get/List/Create/Update/Delete）
+

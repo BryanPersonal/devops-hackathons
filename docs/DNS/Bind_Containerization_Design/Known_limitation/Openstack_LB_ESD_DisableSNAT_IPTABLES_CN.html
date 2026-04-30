@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="CIA Plato Agent">
+  <meta name="date" content="2026-03-28T00:25:22.478Z">
+  <title>Plato Response</title>
+  <style>
+
+      /* Base styles */
+      :root {
+        --sapBrandColor: #1661BE;
+        --sapTextColor: #333;
+        --sapContent_LabelColor: #6b7280;
+        --sapTile_Background: #f8f9fa;
+        --sapTile_BorderColor: #e5e7eb;
+        --sapPositiveColor: #107e3e;
+        --sapNegativeColor: #b00;
+        --sapInformativeColor: #1661BE;
+        --sapCriticalColor: #e9730c;
+        --sapField_Background: #f5f5f5;
+        --sapBackgroundColor: #fafafa;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        line-height: 1.6;
+        color: var(--sapTextColor);
+        background: #fff;
+        margin: 0;
+        padding: 2rem;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      /* Typography */
+      h1, h2, h3, h4, h5, h6 {
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+
+      h1 { font-size: 2em; border-bottom: 1px solid var(--sapTile_BorderColor); padding-bottom: 0.3em; }
+      h2 { font-size: 1.5em; border-bottom: 1px solid var(--sapTile_BorderColor); padding-bottom: 0.3em; }
+      h3 { font-size: 1.25em; }
+      h4 { font-size: 1em; }
+
+      p {
+        margin: 1em 0;
+      }
+
+      a {
+        color: var(--sapBrandColor);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      /* Lists */
+      ul, ol {
+        padding-left: 2em;
+        margin: 1em 0;
+      }
+
+      li {
+        margin: 0.25em 0;
+      }
+
+      /* Code */
+      code {
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+        font-size: 0.9em;
+        background: var(--sapField_Background);
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+      }
+
+      pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        margin: 0;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Liberation Mono', monospace;
+        font-size: 0.85em;
+        line-height: 1.5;
+      }
+
+      pre code {
+        background: transparent;
+        padding: 0;
+        font-size: inherit;
+        color: inherit;
+        font-family: inherit;
+      }
+
+      /* Exported code block container */
+      .code-block-export {
+        margin: 1em 0;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        background: #1e1e1e;
+      }
+
+      .code-block-export-header {
+        background: #2d2d2d;
+        color: #a0a0a0;
+        padding: 0.4rem 1rem;
+        font-size: 0.75em;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        border-bottom: 1px solid #3a3a3a;
+        text-transform: lowercase;
+      }
+
+      .code-block-export pre {
+        margin: 0;
+        border-radius: 0;
+      }
+
+      /* Tables */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1em 0;
+      }
+
+      th, td {
+        border: 1px solid var(--sapTile_BorderColor);
+        padding: 0.5rem 1rem;
+        text-align: left;
+      }
+
+      th {
+        background: var(--sapTile_Background);
+        font-weight: 600;
+      }
+
+      tr:nth-child(even) {
+        background: var(--sapBackgroundColor);
+      }
+
+      /* Exclude code tables from data-table styling */
+      .code-block-export table,
+      .code-table {
+        border: none;
+        width: auto;
+        margin: 0;
+      }
+
+      .code-block-export th,
+      .code-block-export td,
+      .code-table th,
+      .code-table td {
+        border: none;
+        padding: 0;
+        background: transparent;
+      }
+
+      .code-table tr:nth-child(even),
+      .code-block-export tr:nth-child(even) {
+        background: transparent;
+      }
+
+      /* Blockquotes */
+      blockquote {
+        margin: 1em 0;
+        padding: 0.5em 1em;
+        border-left: 4px solid var(--sapBrandColor);
+        background: var(--sapTile_Background);
+        color: var(--sapContent_LabelColor);
+      }
+
+      blockquote p {
+        margin: 0.5em 0;
+      }
+
+      /* Images */
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.375rem;
+      }
+
+      /* Diagrams (Mermaid, Vega) */
+      .mermaid-diagram, .vega-container, .vega-chart {
+        text-align: center;
+        padding: 1em;
+        background: var(--sapTile_Background);
+        border-radius: 0.375rem;
+        border: 1px solid var(--sapTile_BorderColor);
+        margin: 1em 0;
+      }
+
+      .mermaid-diagram svg, .vega-container svg, .vega-chart svg {
+        max-width: 100%;
+        height: auto;
+      }
+
+      /* Hide Vega action buttons in export */
+      .vega-embed details,
+      .vega-embed summary,
+      .vega-actions,
+      .vega-embed .vega-actions-wrapper,
+      .vega-embed > details {
+        display: none !important;
+      }
+
+      /* Hide any remaining placeholders */
+      .vega-placeholder,
+      .mermaid-placeholder,
+      .lazy-placeholder,
+      [class*="-placeholder"] {
+        display: none !important;
+      }
+
+      /* Alerts/Callouts */
+      .alert, .callout, [class*="alert-"] {
+        padding: 1rem;
+        border-radius: 0.375rem;
+        margin: 1em 0;
+        border-left: 4px solid;
+      }
+
+      .alert-info, .callout-info {
+        background: rgba(22, 97, 190, 0.1);
+        border-color: var(--sapInformativeColor);
+      }
+
+      .alert-warning, .callout-warning {
+        background: rgba(233, 115, 12, 0.1);
+        border-color: var(--sapCriticalColor);
+      }
+
+      .alert-danger, .callout-danger, .alert-error {
+        background: rgba(187, 0, 0, 0.1);
+        border-color: var(--sapNegativeColor);
+      }
+
+      .alert-success, .callout-success {
+        background: rgba(16, 126, 62, 0.1);
+        border-color: var(--sapPositiveColor);
+      }
+
+      /* Horizontal rule */
+      hr {
+        border: none;
+        border-top: 1px solid var(--sapTile_BorderColor);
+        margin: 2em 0;
+      }
+
+      /* KaTeX math */
+      .katex {
+        font-size: 1.1em;
+      }
+
+      .katex-display {
+        overflow-x: auto;
+        padding: 0.5em 0;
+      }
+
+      /* Syntax highlighting - VS Code Dark+ theme */
+      .hljs-keyword,
+      .hljs-selector-tag,
+      .hljs-literal,
+      .hljs-section { color: #569cd6; }
+
+      .hljs-string,
+      .hljs-attr,
+      .hljs-template-variable,
+      .hljs-addition { color: #ce9178; }
+
+      .hljs-number,
+      .hljs-symbol { color: #b5cea8; }
+
+      .hljs-comment,
+      .hljs-quote,
+      .hljs-deletion { color: #6a9955; font-style: italic; }
+
+      .hljs-function .hljs-keyword { color: #569cd6; }
+      
+      .hljs-title,
+      .hljs-title.function_ { color: #dcdcaa; }
+
+      .hljs-type,
+      .hljs-built_in,
+      .hljs-class .hljs-title { color: #4ec9b0; }
+
+      .hljs-variable,
+      .hljs-name { color: #9cdcfe; }
+
+      .hljs-operator { color: #d4d4d4; }
+      .hljs-punctuation { color: #d4d4d4; }
+
+      .hljs-meta { color: #569cd6; }
+      .hljs-meta .hljs-string { color: #ce9178; }
+      
+      .hljs-regexp { color: #d16969; }
+      
+      .hljs-attribute { color: #9cdcfe; }
+
+      .hljs-tag { color: #808080; }
+      .hljs-tag .hljs-name { color: #569cd6; }
+      .hljs-tag .hljs-attr { color: #9cdcfe; }
+
+      .hljs-selector-class { color: #d7ba7d; }
+      .hljs-selector-id { color: #d7ba7d; }
+
+      .hljs-params { color: #d4d4d4; }
+
+      .hljs-property { color: #9cdcfe; }
+
+      .hljs-emphasis { font-style: italic; }
+      .hljs-strong { font-weight: bold; }
+
+      /* Footer */
+      .export-footer {
+        margin-top: 3rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--sapTile_BorderColor);
+        font-size: 0.8rem;
+        color: var(--sapContent_LabelColor);
+        text-align: center;
+      }
+
+      /* Print styles */
+      @media print {
+        body {
+          padding: 0;
+          max-width: none;
+        }
+
+        pre {
+          white-space: pre-wrap;
+          word-wrap: break-word;
+        }
+
+        a {
+          text-decoration: none;
+        }
+
+        .export-footer {
+          display: none;
+        }
+      }
+    
+
+  </style>
+</head>
+<body>
+  <article class="plato-response">
+<!----><div class="text-block-item"><div class="text-block-content"><div class="markdown-container"><div class="markdown-tokens"><h2 class="markdown-heading markdown-heading--2" id="ccloud_special_l4_deactivate_snat-iptables-dig-"><span class="markdown-inline-tokens"><span class="text-token">是的，</span><code class="codespan-token" title="Click to copy">ccloud_special_l4_deactivate_snat <!----></code><span class="text-token"> 必须结合 iptables 规则才能让 </span><code class="codespan-token" title="Click to copy">dig <!----></code><span class="text-token"> 正常工作</span></span></h2><p class="markdown-paragraph"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">单独配置这个 tag 只完成了 DSR 的"上半段"（LB 不再做 SNAT），但"下半段"（响应包正确返回）完全依赖 Worker 节点上的 iptables + 路由规则。</span></span></strong><span class="text-token"> 没有这些规则，DNS 响应包会丢失或被客户端拒绝——这正是你 </span><code class="codespan-token" title="Click to copy">dig <!----></code><span class="text-token"> 超时的原因。</span></span></p><hr class="markdown-hr"><h3 class="markdown-heading markdown-heading--3" id="-dig-iptables-"><span class="markdown-inline-tokens"><span class="text-token">为什么 </span><code class="codespan-token" title="Click to copy">dig <!----></code><span class="text-token"> 需要 iptables 配合</span></span></h3><p class="markdown-paragraph"><span class="markdown-inline-tokens"><span class="text-token">正常模式下（有 SNAT），LB 全程代理流量，后端不需要任何特殊配置。一旦关闭 SNAT（启用 DSR），响应路径完全改变，Worker 节点必须自行解决三个问题：</span></span></p><div class="table-renderer"><div class="table-wrapper"><table class="markdown-table"><thead><tr><th class="table-header-cell"><span class="markdown-inline-tokens"><span class="text-token">问题</span></span><span class="resize-handle"></span></th><th class="table-header-cell"><span class="markdown-inline-tokens"><span class="text-token">没有 iptables 会怎样</span></span><span class="resize-handle"></span></th><th class="table-header-cell"><span class="markdown-inline-tokens"><span class="text-token">对应 iptables 规则</span></span><span class="resize-handle"></span></th></tr></thead><tbody><tr class="table-row"><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">conntrack 干扰</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">内核自动 reverse-NAT 破坏你的自定义 SNAT</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><code class="codespan-token" title="Click to copy">raw/PREROUTING <!----></code><span class="text-token"> → </span><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">NOTRACK</span></span></strong></span></td></tr><tr class="table-row"><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">响应包路由</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">走默认路由直接发给客户端，绕过 F5，客户端收到源 IP 不是 LB VIP 的响应并丢弃</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><code class="codespan-token" title="Click to copy">mangle/PREROUTING <!----></code><span class="text-token"> → </span><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">MARK 0x1</span></span></strong><span class="text-token"> + 路由表 100</span></span></td></tr><tr class="table-row"><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">源 IP:Port 匹配</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><span class="text-token">F5 无法关联响应到其会话表</span></span></td><td class="table-cell"><span class="markdown-inline-tokens"><code class="codespan-token" title="Click to copy">nat/POSTROUTING <!----></code><span class="text-token"> → </span><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">SNAT</span></span></strong><span class="text-token"> 到 </span><code class="codespan-token" title="Click to copy">NODE_IP:NODEPORT <!----></code></span></td></tr></tbody></table></div><!----></div><hr class="markdown-hr"><h3 class="markdown-heading markdown-heading--3" id="-dsr-entrypointsh"><span class="markdown-inline-tokens"><span class="text-token">完整的 DSR 数据包流（来自 entrypoint.sh）</span></span></h3><p class="markdown-paragraph"><span class="markdown-inline-tokens"><span class="link-token-wrapper link-token--external"><a href="https://github.tools.sap/cia-docker-images/k8s-cust-node/blob/main/entrypoints/Fountain/entrypoint.sh" target="_blank" rel="noopener noreferrer">entrypoint.sh </a><span aria-hidden="true"> ↗</span></span><span class="text-token"> 中 S4 DNS View 自动配置（L229-402）创建了三条 iptables 规则和一条路由：</span></span></p><h4 class="markdown-heading markdown-heading--4" id="-1l339-350"><span class="markdown-inline-tokens"><span class="text-token">规则 1：禁用连接跟踪（L339-350）</span></span></h4><div class="code-block-export"><div class="code-block-export-header">Bash</div><pre><code class="hljs language-bash">iptables -t raw -A PREROUTING -p udp -d 100.64.0.0/12 --dport 53 \
+    -j NOTRACK -m comment --comment <span class="hljs-string">"S4_DNSVIEW_CC"</span></code></pre></div><p class="markdown-paragraph"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">作用</span></span></strong><span class="text-token">：对发往 Pod 网段（</span><code class="codespan-token" title="Click to copy">100.64.0.0/12 <!----></code><span class="text-token">）53 端口的 UDP 包跳过 conntrack。如果不跳过，内核会自动 reverse-NAT 响应包，覆盖掉你后面配置的自定义 SNAT。</span></span></p><h4 class="markdown-heading markdown-heading--4" id="-2l352-364"><span class="markdown-inline-tokens"><span class="text-token">规则 2：标记响应包（L352-364）</span></span></h4><div class="code-block-export"><div class="code-block-export-header">Bash</div><pre><code class="hljs language-bash">iptables -t mangle -A PREROUTING -p udp -s 100.64.0.0/12 --sport 53 \
+    ! -d 100.64.0.0/12 \
+    -j MARK --set-mark 1 -m comment --comment <span class="hljs-string">"S4_DNSVIEW_CC"</span></code></pre></div><p class="markdown-paragraph"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">作用</span></span></strong><span class="text-token">：对从 Pod 发出的 DNS 响应（源端口 53，目标不是 Pod 网段）打上 fwmark 0x1 标记，使其走</span><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">路由表 100</span></span></strong><span class="text-token"> 而非默认路由。</span></span></p><h4 class="markdown-heading markdown-heading--4" id="-100-f5l289-311"><span class="markdown-inline-tokens"><span class="text-token">路由表 100：强制响应包经过 F5（L289-311）</span></span></h4><div class="code-block-export"><div class="code-block-export-header">Bash</div><pre><code class="hljs language-bash">ip rule add fwmark 0x1 lookup 100
+ip route replace default via &lt;LB_VIP&gt; dev &lt;interface&gt; table 100</code></pre></div><p class="markdown-paragraph"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">作用</span></span></strong><span class="text-token">：被标记的响应包走路由表 100，默认网关指向 LB VIP。这确保响应</span><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">必须经过 F5</span></span></strong><span class="text-token">，由 F5 将源 IP 改回 LB VIP 后再发给客户端。</span></span></p><h4 class="markdown-heading markdown-heading--4" id="-3snat-l366-378"><span class="markdown-inline-tokens"><span class="text-token">规则 3：SNAT 源地址（L366-378）</span></span></h4><div class="code-block-export"><div class="code-block-export-header">Bash</div><pre><code class="hljs language-bash">iptables -t nat -A POSTROUTING -p udp -s 100.64.0.0/12 --sport 53 \
+    ! -d 100.64.0.0/12 \
+    -j SNAT --to-source &lt;NODE_IP&gt;:&lt;NODEPORT&gt; -m comment --comment <span class="hljs-string">"S4_DNSVIEW_CC"</span></code></pre></div><p class="markdown-paragraph"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">作用</span></span></strong><span class="text-token">：将响应包的源从 </span><code class="codespan-token" title="Click to copy">POD_IP:53 <!----></code><span class="text-token"> 改为 </span><code class="codespan-token" title="Click to copy">NODE_IP:NODEPORT <!----></code><span class="text-token">，让 F5 能匹配到其会话表（F5 记录的是 </span><code class="codespan-token" title="Click to copy">NODE_IP:NODEPORT <!----></code><span class="text-token">）。</span></span></p><hr class="markdown-hr"><h3 class="markdown-heading markdown-heading--3" id=""><span class="markdown-inline-tokens"><span class="text-token">完整数据包流</span></span></h3><div class="code-block-export"><div class="code-block-export-header">plaintext</div><pre><code class="hljs language-plaintext">DNS 查询入站：<span class="hljs-built_in"></span>
+<span class="hljs-built_in">Client </span>──[<span class="hljs-attribute">dst</span>=LB_VIP:53]──&gt; F5(DSR) ──[<span class="hljs-attribute">dst</span>=NODE:NODEPORT, src保留CLIENT_IP]──&gt; Worker
+&nbsp;
+Worker 节点处理：
+  raw/PREROUTING  → NOTRACK (跳过conntrack)
+  kube-proxy DNAT → NodePort 转发到 Pod
+  Pod 处理<span class="hljs-built_in"> DNS </span>查询 → 生成响应
+<span class="hljs-built_in"></span>
+<span class="hljs-built_in">DNS </span>响应出站：
+  mangle/PREROUTING → MARK 0x1 (标记响应包)
+  路由决策          → fwmark 0x1 → 查路由表 100 → 网关=LB_VIP
+  nat/POSTROUTING   → SNAT src 改为 NODE_IP:NODEPORT
+  Worker ──[<span class="hljs-attribute">src</span>=NODE:NODEPORT, <span class="hljs-attribute">dst</span>=CLIENT_IP]──&gt; F5 ──[src改为LB_VIP:53]──&gt; Client</code></pre></div><p class="markdown-paragraph"><span class="markdown-inline-tokens"><strong class="strong-token"><span class="markdown-inline-tokens"><span class="text-token">如果缺少这些规则中的任何一条</span></span></strong><span class="text-token">，响应包要么走错路径，要么源 IP 不匹配，要么被 conntrack 干扰——结果都是 </span><code class="codespan-token" title="Click to copy">dig <!----></code><span class="text-token"> 超时。</span></span></p><hr class="markdown-hr"><h3 class="markdown-heading markdown-heading--3" id=""><span class="markdown-inline-tokens"><span class="text-token">你需要做什么</span></span></h3><p class="markdown-paragraph"><span class="markdown-inline-tokens"><span class="text-token">部署 </span><span class="link-token-wrapper link-token--external"><a href="https://github.tools.sap/cia-helm-charts/k8s-cust-node" target="_blank" rel="noopener noreferrer">k8s-cust-node </a><span aria-hidden="true"> ↗</span></span><span class="text-token"> Helm Chart 作为 DaemonSet，并在 ConfigMap 中正确配置参数：</span></span></p><ul class="markdown-list markdown-list--unordered"><li class="markdown-list-item"><!----><span class="markdown-list-item-content"><span class="markdown-inline-tokens"><span class="markdown-inline-tokens"><code class="codespan-token" title="Click to copy">S4_DNSVIEW_SCI_AUTO_CONFIG=true <!----></code><span class="text-token">（自动模式，适用于 DNS 场景）</span></span></span></span><!----></li><li class="markdown-list-item"><!----><span class="markdown-list-item-content"><span class="markdown-inline-tokens"><span class="markdown-inline-tokens"><span class="text-token">或者在 </span><code class="codespan-token" title="Click to copy">iptables-cm <!----></code><span class="text-token"> 和 </span><code class="codespan-token" title="Click to copy">routetab-cm <!----></code><span class="text-token"> 中手动定义上述三条规则和路由</span></span></span></span><!----></li></ul><p class="markdown-paragraph"><span class="markdown-inline-tokens"><span class="text-token">配置完成后 initContainer 会在每个 Worker 节点上自动应用这些规则，之后 </span><code class="codespan-token" title="Click to copy">dig <!----></code><span class="text-token"> 就能正常工作。</span></span></p></div></div></div></div>
+  </article>
+  <footer class="export-footer">
+    <p>Generated by CIA Plato Agent on 3/28/2026, 8:25:22 AM</p>
+  </footer>
+</body>
+</html>

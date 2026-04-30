@@ -1,0 +1,1 @@
+`W0323 06:31:59.079219       1 warnings.go:70] v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice`
