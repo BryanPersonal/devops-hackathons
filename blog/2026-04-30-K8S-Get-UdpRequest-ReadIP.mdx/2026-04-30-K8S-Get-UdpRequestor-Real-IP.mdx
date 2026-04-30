@@ -22,6 +22,11 @@ At the lowest lower, the application obtains the client IP from TCP/UDP socket. 
 - In DNS (BIND), each query arrives over UDP or TCP, and the service logs the source IP directly from the packet metadata.
 - In LDAP (389ds), the server retrieves the client IP from the established TCP session.
 
-> Those approaches are most reliable, as long as the source IP remains unmodified by intermediate systems. In reality, however, this is rarely possible due to pervasive NAT.
+:::tip
+
+Those approaches are most reliable, as long as the source IP remains unmodified by intermediate systems. In reality, however, this is rarely possible due to pervasive NAT.
+:::
+
+![Kubernetes ExternalTrafficPolicy preserves source IP](https://kubernetes.io/images/docs/sourceip-externaltrafficpolicy.svg)
 
 https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
