@@ -144,6 +144,19 @@ const config = {
         theme: themes.github,
         darkTheme: themes.dracula,
       },
+      giscus: {
+        repo: 'BryanPersonal/devops-hackathons',
+        repoId: '',
+        category: 'Announcements',
+        categoryId: '',
+        mapping: 'pathname',
+        strict: '0',
+        reactionsEnabled: '1',
+        emitMetadata: '0',
+        inputPosition: 'top',
+        lang: 'en',
+        loading: 'lazy',
+      },
     }),
 };
 
