@@ -1,12 +1,12 @@
 ---
-slug: To-Get-Real-SourceIP-InPod
-title: To-Get-Real-SourceIP-InPod
+slug: Perserve Client Source IP
+title: Perserve Client Source IP
 authors:
   name: Bryan Chen
-  title: Docusaurus Core Team
+  title: AI DevOps Success Core Team
   url: https://github.com/BryanPersonal
-  image_url: https://github.com/wgao19.png
-tags: [hola, docusaurus]
+  image_url: https://github.com/BryanPersonal.png
+tags: [kubernetes, hola, cloud-native, ClientIP]
 ---
 
 Preserving the client source IP a critical aspect when decommissioning a service running on a traditional VM. The decommissioning process is typically carried out in several phases:
