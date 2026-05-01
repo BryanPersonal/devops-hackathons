@@ -1,21 +1,25 @@
 ---
-slug: VM-Breaking-UDEVRule&NIC
-title: VM-Breaking-UDEVRule&NIC
+slug: INC-Report-VM-Failed-to-Boot-UDEV
+title: INC-Report-VM-Failed-to-Boot-UDEV
 authors:
   name: Bryan Chen
   title: AI DevOps Success Core Team
   url: https://github.com/BryanPersonal
   image_url: https://github.com/BryanPersonal.png
-tags: [VM, UDEV, ESXi, SLES, Openstack, NIC, VMWARE]
+tags: [VM, UDEV, Booting, SLES, Openstack, NIC, VMWARE]
 ---
 
 import TrackLink from '@site/src/components/TrackLink';
 import PostEngagement from '@site/src/components/PostEngagement';
 
+:::tip
+This incident is a typical example of how UDEV rules can break VM booting or how inapproriate Network Interface operation can break VM booting.
+:::
+
 The Incident originated from an Incident reported from customer that their VM can't be booted after resizing the flavor.
 Dmesg shows the NIC name has been changed, also eth0 can't be found by wicked journaling. Link is down.
 ![Dmesg vmxnet changed NIC name](./vmxnet_renamed_eth0.jpeg)
-```
+
 ```
 [    5.609082] [    T977] vmxnet3 0000:0b:00.0 eth0: NIC Link is Up 10000 Mbps
 [    5.616024] [    T977] vmxnet3 0000:13:00.0 eth1: NIC Link is Up 10000 Mbps
@@ -24,7 +28,7 @@ Dmesg shows the NIC name has been changed, also eth0 can't be found by wicked jo
 [    5.699184] [    T977] vmxnet3 0000:13:00.0 eth0: renamed from eth1
 [    5.749051] [    T967] vmxnet3 0000:0b:00.0 eth1: renamed from rename2
 ```
-```
+
 ![GuestOS Wicked Journaling](./wicked_state.png)
 
 
@@ -97,7 +101,6 @@ SUBSYSTEM=="net", ACTION=="add", DRIVERS=="vmxnet3", ATTR{dev_id}=="0x0", KERNEL
 
 # PCI device 0x15ad:0x07b0 (vmxnet3)
 SUBSYSTEM=="net", ACTION=="add", DRIVERS=="vmxnet3", ATTR{dev_id}=="0x0", KERNELS=="0000:0b:00.0", ATTR{type}=="1", KERNEL=="eth*", NAME="eth0"
-```
 
 👉 persistent-net-generator.rules
 是早期 udev 用来“自动生成 70-persistent-net.rules”的规则文件，
