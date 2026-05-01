@@ -4,8 +4,8 @@ title: First Blog Post
 authors:
   name: Gao Wei
   title: Docusaurus Core Team
-  url: https://github.com/wgao19
-  image_url: https://github.com/wgao19.png
+  url: https://github.com/BryanPersonal
+  image_url: https://github.com/BryanPersonal.png
 tags: [hola, docusaurus]
 ---
 

@@ -1,6 +1,6 @@
 ---
-slug: How Kuerbenetes interacts with an external Load Balancer
-title: How Kuerbenetes interacts with an external Load Balancer
+slug: K8S-External-Load-Balancer
+title: K8S-External-Load-Balancer
 authors:
   name: Bryan Chen
   title: AI DevOps Success Core Team
@@ -10,3 +10,5 @@ tags: [kubernetes, hola, cloud-native, ClientIP]
 ---
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+- <TrackLink to="https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/" postSlug="CloudProvider">Kubernetes External LoadBalancer docs</TrackLink>

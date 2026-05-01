@@ -74,8 +74,8 @@ export default function PostEngagement({
   return (
     <section className="postEngagement">
       <div className="postEngagementHeader">
-        <h3>Engagement</h3>
-        <p>Share global feedback and join the discussion across all users.</p>
+        <h3>What Do You Think ?😊</h3>
+        <p>Welcome to share your thoughts and join the discussion.</p>
       </div>
 
       <div className="postEngagementMetrics">
