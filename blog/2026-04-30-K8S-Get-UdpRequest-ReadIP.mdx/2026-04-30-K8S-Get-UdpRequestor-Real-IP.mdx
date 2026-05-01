@@ -22,7 +22,7 @@ At the lowest lower, the application obtains the client IP from TCP/UDP socket. 
 - In DNS (BIND), each query arrives over UDP or TCP, and the service logs the source IP directly from the packet metadata.
 - In LDAP (389ds), the server retrieves the client IP from the established TCP session.
 
-:::tip
+:::warning
 
 Those approaches are most reliable, as long as the source IP remains unmodified by intermediate systems. In reality, however, this is rarely possible due to pervasive NAT.
 :::

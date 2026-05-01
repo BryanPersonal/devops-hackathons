@@ -3,7 +3,7 @@ slug: INC-Report-VM-Failed-to-Boot-UDEV
 title: INC-Report-VM-Failed-to-Boot-UDEV
 authors:
   name: Bryan Chen
-  title: AI DevOps Success Core Team
+  title: Innovation junkie. Linux & Kubernetes obsessed
   url: https://github.com/BryanPersonal
   image_url: https://github.com/BryanPersonal.png
 tags: [VM, UDEV, Booting, SLES, Openstack, NIC, VMWARE]
@@ -39,20 +39,24 @@ As seens from the `ip link`, obviously the eth0 is screwing up which have been r
 Then followed by a `wicked` restart. It is started ! But still no SSH/ICMP ping which indicates the NIC is still not working.
   - Ping gateway is not working.
   - `Arp -a` returns single uncompleted entry, instead of partially broken. E.g Successfully learn MAC address other other LAN E.g StorageLAN/BackupLAN. I tried to cross `tcpdump` check with `tcpdump -i eth0 -nn arp`
-  - Honestly, I didn't check udev rules carefully at the beginning. `/etc/udev/rules.d/*/`  Note: higher number takes higher priority.
+  - Honestly, I didn't check udev rules carefully at the beginning. `/etc/udev/rules.d/*/`  Note: higher number takes higher priority. (Note: this is common in Linux, similar to `/etc/sysctl.d/*/` files)
 
 ![TcpdumpArp_UdevRules](./TcpdumpArp_UdevRule.png) 
 
 Evidently, layer2 is broken. We must fix layer2 first before layer3.
-Meanwhile, my colleagues in Europe gave me a clue that MAC address could be changed in CloudProvider/Openstack. Then I tried to compare the Mac address in CloudProvider/Openstack and VM.
+Meanwhile, my colleagues in Europe gave me a clue that MAC address could be changed in CloudProvider/Openstack. 
+Then I tried to compare the Mac address in CloudProvider/Openstack and VM.
 __Core Problem Observed!!__
 It turned out to be the VM's NIC Mac address is loaded incorrectly. We must check udev rules carefully again then.
 
-
-
+### Resolution
+The final resolution is to correct 85-cloud-init rules to match the new MAC address in CloudProvider/Openstack, followed by a VM restart.
+Note: Please also double check PCI slot number's MAC address via `lscpi -vvv` to gurantee the consistency.
 ### FAQ
 Q:  While changing the NIC from Sap Cloud Infrastruture/OpenStack, what will happen to the PCI devices of the VM?
+
 A:
+
 ```
 In ESXi, each VMware vmxnet driver will hang with its fixed PCI SlotPCI Slot（虚拟硬件拓扑）. 
 PCI Slot 
@@ -64,6 +68,7 @@ It is like the first, second PCIe slot on the motherboard.
 ```
 
 Q: How Linux VM detect vNIC change ？
+
 A: Linux kernel detect in order: PCI address -> Load driver -> Create/Register Net Device
 ```
 VMware/OpenStack
@@ -77,7 +82,16 @@ Linux driver
 eth0/enp0s3
 ```
 
-Q: 在openstack 中修改网卡的mac地址后。lspci 仍然显示老的网卡信息` 0b:00.0 Ethernet controller: VMware VMXNET3 Ethernet Controller (rev 01) DeviceName: Ethernet0 Subsystem: VMware VMXNET3 Ethernet Controller Physical Slot: 192 .... Capabilities: [100 v1] Device Serial Number fa-16-3e-ff-ff-42-07-6d` . 如何解决？
+Q: 在openstack 中修改网卡的mac地址后。lspci 仍然显示老的网卡信息, 如何解决？
+```
+0b:00.0 Ethernet controller: VMware VMXNET3 Ethernet Controller (rev 01) 
+DeviceName: Ethernet0 
+Subsystem: VMware VMXNET3 Ethernet Controller 
+Physical Slot: 192 
+...
+Capabilities: [100 v1] Device Serial Number fa-16-3e-ff-ff-42-07-6d
+```
+
 A: 修改 OpenStack 里的 MAC 地址，不会改变 PCI 设备本身。 热插拔基本不可行。 请详细查看 `readlink /sys/class/net/eth0/device`
 ```
 (vadbvaz) cc02v014382:/etc/udev/rules.d #
