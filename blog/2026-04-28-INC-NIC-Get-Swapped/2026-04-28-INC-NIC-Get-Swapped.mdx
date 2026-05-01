@@ -1,12 +1,12 @@
 ---
-slug: VM-NIC-Get-Swapped
-title: VM-NIC-Get-Swapped
+slug: VM-Breaking-UDEVRule&NIC
+title: VM-Breaking-UDEVRule&NIC
 authors:
   name: Bryan Chen
   title: AI DevOps Success Core Team
   url: https://github.com/BryanPersonal
   image_url: https://github.com/BryanPersonal.png
-tags: [VM, ESXi, SLES, Openstack, NIC]
+tags: [VM, UDEV, ESXi, SLES, Openstack, NIC, VMWARE]
 ---
 
 import TrackLink from '@site/src/components/TrackLink';
@@ -37,7 +37,7 @@ Then followed by a `wicked` restart. It is started ! But still no SSH/ICMP ping 
   - `Arp -a` returns single uncompleted entry, instead of partially broken. E.g Successfully learn MAC address other other LAN E.g StorageLAN/BackupLAN. I tried to cross `tcpdump` check with `tcpdump -i eth0 -nn arp`
   - Honestly, I didn't check udev rules carefully at the beginning. `/etc/udev/rules.d/*/`  Note: higher number takes higher priority.
 
-![TcpdumpArp_UdevRules](./TcpdumpArp_UdevRules.png) 
+![TcpdumpArp_UdevRules](./TcpdumpArp_UdevRule.png) 
 
 Evidently, layer2 is broken. We must fix layer2 first before layer3.
 Meanwhile, my colleagues in Europe gave me a clue that MAC address could be changed in CloudProvider/Openstack. Then I tried to compare the Mac address in CloudProvider/Openstack and VM.
