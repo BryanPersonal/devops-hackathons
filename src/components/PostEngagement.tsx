@@ -61,17 +61,14 @@ export default function PostEngagement({
   return (
     <section className="postEngagement">
       <div className="postEngagementHeader">
-        <h3>What Do You Think ?😊</h3>
+        <h3>What Do You Think ? 😊</h3>
         <p>Welcome to share your thoughts and join the discussion.</p>
       </div>
 
       <div className="postEngagementActions">
         <button type="button" className="postLikeButton" onClick={onOpenFeedback}>
-          Open global reactions and comments
+         Navigate to the discussion ➡️
         </button>
-        <span className="postLikeCount">
-          All reactions and comments are persistent and visible across regions/devices.
-        </span>
       </div>
 
       {enableComments ? (

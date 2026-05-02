@@ -1,21 +1,33 @@
 ---
 slug: Perserve-Client-Source-IP
-title: Perserve-Client-Source-IP
+title: In general, how important does Client Source IP matter in Security/Access Control, Logging and Auditing and what are the solutions ?
 authors:
   name: Bryan Chen
   title: Innovation junkie. Linux & Kubernetes obsessed
   url: https://github.com/BryanPersonal
   image_url: https://github.com/BryanPersonal.png
-tags: [kubernetes, hola, cloud-native, ClientIP]
+tags: [kubernetes, Audit, cloud-native, Client-Source-IP]
 ---
 import TrackLink from '@site/src/components/TrackLink';
 import PostEngagement from '@site/src/components/PostEngagement';
 
+Preserving the client source IP in kubernetes is critical for security, compliance and application logics. 
+By default, many kubernetes networking configurations (like `service` type `NodePort` or `LoadBalancer`) perform Source NAT (SNAT), which replaces the original client IP with the IP of worker node.
+
 In a typical Kubernetes cluster using Calico CNI and kube-proxy (iptables mode), a UDP request from a LoadBalancer to a backend Pod udergoes one DNAT and one SNAT by default, resulting in two NAT operations. If externalTrafficPolicy is set to Local, SNAT is avoided, reducing it to a single DNAT.
 
+{/* truncate */}
+
+| NAT 类型   | 发生位置（iptables）      | 从“流量方向”看     |
+| -------- | ------------------- | ------------ |
+| **DNAT** | PREROUTING / OUTPUT | 👉 入站时（刚进节点） |
+| **SNAT** | POSTROUTING         | 👉 出站时（离开节点） |
+
+> Now it's time to figure out PREROUTING and POSTROUTING in iptables. 😊
+
+An flow example:
 > UDP Traffic: CLinet -> LB - > Node(IP:NodePort) -> kube-proxy -> Pod (Calico CNI)
 
-{/* truncate */}
 Preserving the client source IP a critical aspect when decommissioning a service running on a traditional VM. The decommissioning process is typically carried out in several phases:
 1. Notify stakeholders in advance and request them to stop using the service
 2. Monitor incoming traffic to the service
@@ -32,7 +44,10 @@ At the lowest lower, the application obtains the client IP from TCP/UDP socket. 
 :::warning
 
 Those approaches are most reliable, as long as the source IP remains unmodified by intermediate systems. In reality, however, this is rarely possible due to pervasive NAT.
+While preserving source IP via `externalTrafficPolicy: Local`, please be aware of [Caveats and Limitations](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#caveats-and-limitations-when-preserving-source-ips)
 :::
+
+
 
 ![Kubernetes ExternalTrafficPolicy preserves source IP](https://kubernetes.io/images/docs/sourceip-externaltrafficpolicy.svg)
 

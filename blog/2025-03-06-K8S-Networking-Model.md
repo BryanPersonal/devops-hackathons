@@ -9,9 +9,8 @@ authors:
 tags: [CNI, Kubernetes, Cloud-native, ClientIP,]
 ---
 
-In a typical Kubernetes cluster using Calico CNI and kube-proxy (iptables mode), a UDP request from a LoadBalancer to a backend Pod udergoes one DNAT and one SNAT by default, resulting in two NAT operations. If externalTrafficPolicy is set to Local, SNAT is avoided, reducing it to a single DNAT.
 
-> UDP Traffic: CLinet -> LB - > Node(IP:NodePort) -> kube-proxy -> Pod (Calico CNI)
+abc
 
 {/* truncate */}
 
