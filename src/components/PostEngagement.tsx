@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Giscus from '@giscus/react';
 import {useColorMode, useThemeConfig} from '@docusaurus/theme-common';
 
@@ -42,19 +42,6 @@ export default function PostEngagement({
     Boolean(giscus?.category) &&
     Boolean(giscus?.categoryId);
 
-  useEffect(() => {
-    const scriptId = 'busuanzi-script';
-    if (document.getElementById(scriptId)) {
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.id = scriptId;
-    script.async = true;
-    script.src = '//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js';
-    document.body.appendChild(script);
-  }, []);
-
   const onOpenFeedback = (): void => {
     if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
       window.gtag('event', 'post_feedback_entry', {
@@ -76,19 +63,6 @@ export default function PostEngagement({
       <div className="postEngagementHeader">
         <h3>What Do You Think ?😊</h3>
         <p>Welcome to share your thoughts and join the discussion.</p>
-      </div>
-
-      <div className="postEngagementMetrics">
-        <div className="postMetric" id="busuanzi_container_page_pv">
-          <span className="postMetricLabel">Views</span>
-          <span className="postMetricValue" id="busuanzi_value_page_pv">
-            -
-          </span>
-        </div>
-        <div className="postMetric">
-          <span className="postMetricLabel">Feedback Storage</span>
-          <span className="postMetricValue">Global (Giscus)</span>
-        </div>
       </div>
 
       <div className="postEngagementActions">

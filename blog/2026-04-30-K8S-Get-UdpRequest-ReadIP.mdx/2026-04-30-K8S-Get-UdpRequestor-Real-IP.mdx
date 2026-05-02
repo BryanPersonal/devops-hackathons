@@ -1,14 +1,21 @@
 ---
-slug: Perserve Client Source IP
-title: Perserve Client Source IP
+slug: Perserve-Client-Source-IP
+title: Perserve-Client-Source-IP
 authors:
   name: Bryan Chen
-  title: AI DevOps Success Core Team
+  title: Innovation junkie. Linux & Kubernetes obsessed
   url: https://github.com/BryanPersonal
   image_url: https://github.com/BryanPersonal.png
 tags: [kubernetes, hola, cloud-native, ClientIP]
 ---
+import TrackLink from '@site/src/components/TrackLink';
+import PostEngagement from '@site/src/components/PostEngagement';
 
+In a typical Kubernetes cluster using Calico CNI and kube-proxy (iptables mode), a UDP request from a LoadBalancer to a backend Pod udergoes one DNAT and one SNAT by default, resulting in two NAT operations. If externalTrafficPolicy is set to Local, SNAT is avoided, reducing it to a single DNAT.
+
+> UDP Traffic: CLinet -> LB - > Node(IP:NodePort) -> kube-proxy -> Pod (Calico CNI)
+
+{/* truncate */}
 Preserving the client source IP a critical aspect when decommissioning a service running on a traditional VM. The decommissioning process is typically carried out in several phases:
 1. Notify stakeholders in advance and request them to stop using the service
 2. Monitor incoming traffic to the service
@@ -30,3 +37,6 @@ Those approaches are most reliable, as long as the source IP remains unmodified 
 ![Kubernetes ExternalTrafficPolicy preserves source IP](https://kubernetes.io/images/docs/sourceip-externaltrafficpolicy.svg)
 
 https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+
+<PostEngagement postId="k8s-get-udp-requestor-real-ip" postTitle="K8S Get UDP Requestor Real IP" enableComments />
+

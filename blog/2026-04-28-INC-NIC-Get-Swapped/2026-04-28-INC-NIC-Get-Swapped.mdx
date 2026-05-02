@@ -12,11 +12,10 @@ tags: [VM, UDEV, Booting, SLES, Openstack, NIC, VMWARE]
 import TrackLink from '@site/src/components/TrackLink';
 import PostEngagement from '@site/src/components/PostEngagement';
 
-:::tip
-This incident is a typical example of how UDEV rules can break VM booting or how inapproriate Network Interface operation can break VM booting.
-:::
+This situation perfectly illustrates the risks that **udev** rules and inappropriate **Netowrk Interface** operation (From CloudProvider/Openstack) pose to VM stability. It all began with a customer report stating their VM failed to boot after a routine flavor upgrade. 
 
-The Incident originated from an Incident reported from customer that their VM can't be booted after resizing the flavor.
+{/* truncate */}
+
 Dmesg shows the NIC name has been changed, also eth0 can't be found by wicked journaling. Link is down.
 ![Dmesg vmxnet changed NIC name](./vmxnet_renamed_eth0.jpeg)
 
@@ -37,7 +36,7 @@ At the very beginging, I thought it is a driver issue therefore engaged the hype
 ![NIC Link Down](./NIC_Link_Down.png)
 As seens from the `ip link`, obviously the eth0 is screwing up which have been renamed into rename2. Then I tried to fix the NIC name `ip link set rename2 name eth0`.
 Then followed by a `wicked` restart. It is started ! But still no SSH/ICMP ping which indicates the NIC is still not working.
-  - Ping gateway is not working.
+  - Ping gateway is not working. Gateway isn't screwing up. E.g `ip route list` or `ip route get <IP>`
   - `Arp -a` returns single uncompleted entry, instead of partially broken. E.g Successfully learn MAC address other other LAN E.g StorageLAN/BackupLAN. I tried to cross `tcpdump` check with `tcpdump -i eth0 -nn arp`
   - Honestly, I didn't check udev rules carefully at the beginning. `/etc/udev/rules.d/*/`  Note: higher number takes higher priority. (Note: this is common in Linux, similar to `/etc/sysctl.d/*/` files)
 
