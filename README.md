@@ -116,3 +116,14 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v2
 ```
+
+
+```
+Handmade notes
+
+# Generate a blog with template
+npm run new:blog -- my-post-slug "Optional title"
+
+# Local testing ??
+npm run build 
+```

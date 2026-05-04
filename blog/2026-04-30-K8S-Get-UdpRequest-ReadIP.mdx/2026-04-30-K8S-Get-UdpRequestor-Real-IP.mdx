@@ -1,6 +1,6 @@
 ---
 slug: Perserve-Client-Source-IP
-title: In general, how important does Client Source IP matter in Security/Access Control, Logging and Auditing and what are the solutions ?
+title: How to Get a Client’s “Real” IP
 authors:
   name: Bryan Chen
   title: Innovation junkie. Linux & Kubernetes obsessed
@@ -11,23 +11,100 @@ tags: [kubernetes, Audit, cloud-native, Client-Source-IP]
 import TrackLink from '@site/src/components/TrackLink';
 import PostEngagement from '@site/src/components/PostEngagement';
 
-Preserving the client source IP in kubernetes is critical for security, compliance and application logics. 
+Preserving the client source IP in kubernetes is critical for security, logging, auditing/compliance and application logics. 
 By default, many kubernetes networking configurations (like `service` type `NodePort` or `LoadBalancer`) perform Source NAT (SNAT), which replaces the original client IP with the IP of worker node.
 
-In a typical Kubernetes cluster using Calico CNI and kube-proxy (iptables mode), a UDP request from a LoadBalancer to a backend Pod udergoes one DNAT and one SNAT by default, resulting in two NAT operations. If externalTrafficPolicy is set to Local, SNAT is avoided, reducing it to a single DNAT.
+In a typical Kubernetes cluster using Calico CNI and kube-proxy (iptables mode), an UDP request from a LoadBalancer to a backend Pod undergoes one DNAT and one SNAT by default, resulting in two NAT operations. If externalTrafficPolicy is set to Local, SNAT is avoided, reducing it to a single DNAT.
 
 {/* truncate */}
 
-| NAT 类型   | 发生位置（iptables）      | 从“流量方向”看     |
-| -------- | ------------------- | ------------ |
-| **DNAT** | PREROUTING / OUTPUT | 👉 入站时（刚进节点） |
-| **SNAT** | POSTROUTING         | 👉 出站时（离开节点） |
+> **DNAT is applied in the PREROUTING chain before routing decisions are made, typically affecting incoming traffic. SNAT is applied in the POSTROUTING chain after routing, modifying packages as they leave the nodes. In Kubernetes, a single incoming request can experience both DNAT (on ingress) and SNAT(on egress) within the same node.
+
+
+| NAT type    | Where it happens (iptables) | From a “traffic flow” perspective |
+| ----------- | ----------------------------- | --------------------------------- |
+| **DNAT**    | PREROUTING / OUTPUT           | 👉 Ingress (as traffic enters the node) |
+| **SNAT**    | POSTROUTING                   | 👉 Egress (as traffic leaves the node)  |
 
 > Now it's time to figure out PREROUTING and POSTROUTING in iptables. 😊
 
 An flow example:
 > UDP Traffic: CLinet -> LB - > Node(IP:NodePort) -> kube-proxy -> Pod (Calico CNI)
 
+In this setup, all incoming packets traverse **cali-PREROUTING** first for Calico's pre-processing, then continue to **KUBE-SERVICES** where kube-proxy performs service matching and DNAT. Equal counters indicate no early packet drops or bypass before kube-proxy.
+```
+nodesh-i577081-maxwell-az-alpha-z1-86495-5hzgt:/ # iptables -t nat -L PREROUTING -n -v
+Chain PREROUTING (policy ACCEPT 43084 packets, 2586K bytes)
+ pkts bytes target     prot opt in     out     source               destination
+  38M 2289M cali-PREROUTING  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:6gwbT8clXdHdC1b1 */
+>>> 所有进入节点的流量，都会先跳转到 Calico 的 PREROUTING 链
+>>> 在 nat 表里，Calico 通常做的是：
+>>> 一些 mark 标记
+>>> 与策略/路由相关的预处理
+>>> 处理 overlay（IPIP / VXLAN）入口流量
+
+  38M 2289M KUBE-SERVICES  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service portals */
+>>> 所有流量在经过 Calico 后，继续进入 kube-proxy 的 Service 处理链
+>>> 这里才是 Kubernetes 的核心：
+>>> 匹配 ClusterIP / NodePort / LoadBalancer
+>>> 做 DNAT（转 Pod）
+>>> 做负载均衡
+```
+
+#### Take fluent-bit service as an example
+```
+>>> Overall Kube-proxy builds the chain for NATing the traffic to the backend Pods.
+KUBE-SERVICES
+   ↓
+KUBE-SVC-XXXX（按端口）
+   ↓
+KUBE-SEP-XXXX（按 Pod）
+   ↓
+DNAT → PodIP
+
+>>> At the same time 
+KUBE-MARK-MASQ → POSTROUTING → SNAT
+
+
+P.S. identify all NAT for fluent-bit service: iptables -t nat -L -n -v |grep fluent-bit
+```
+
+```
+>>> As shown above, in the KUBE-SERVICES chain, kube-proxy DNATs the fluent-bit Service ClusterIP and forwards traffic to the backend Pods.
+>>> Note: A ClusterIP is a virtual IP address used within a Kubernetes cluster to expose a service. It is implemented via kube-proxy using iptables or IPVS rules, which perform DNAT to route traffic to backend Pods.
+>>> -L KUBE-SERVICES: 列出 (List) 名为 KUBE-SERVICES 的自定义链。这是 K8s 网络插件（如 kube-proxy）定义的总入口链。
+
+nodesh-i577081-maxwell-az-alpha-z1-86495-5hzgt:/ # iptables -t nat -L KUBE-SERVICES -n -v |grep fluent-bit
+    0     0 KUBE-SVC-JXAWHQJ4TWOO5OLQ  tcp  --  *      *       0.0.0.0/0            100.104.104.112      /* monitoring/fluent-bit:http cluster IP */ tcp dpt:2020
+    0     0 KUBE-SVC-W5XLKHDUNWN4HHWD  tcp  --  *      *       0.0.0.0/0            100.104.104.112      /* monitoring/fluent-bit:input cluster IP */ tcp dpt:8080
+```
+
+Full appendix with fluent-bit / kube-proxy iptables commentary (Markdown source in-repo, not published as its own blog post):
+
+<TrackLink to="https://github.com/BryanPersonal/devops-hackathons/blob/main/blog/2026-04-30-K8S-Get-UdpRequest-ReadIP.mdx/_fluent-bit-svc-kube-proxy-iptables.md" postSlug="Perserve-Client-Source-IP">fluent-bit — kube-proxy iptables deep dive</TrackLink>
+
+```
+KUBE-SEP-6LTZJUSN2WI4L7UA  all  --  anywhere             anywhere             /* monitoring/fluent-bit:http -> 100.104.1.4:2020 */ statistic mode random probability 0.25000000000
+KUBE-SEP-CYOVMJPAPGHQXHXT  all  --  anywhere             anywhere             /* monitoring/fluent-bit:http -> 100.104.5.16:2020 */ statistic mode random probability 0.33333333349
+KUBE-SEP-PPI2HUMEK34PDU6F  all  --  anywhere             anywhere             /* monitoring/fluent-bit:http -> 100.104.6.251:2020 */ statistic mode random probability 0.50000000000
+KUBE-SEP-OGFQV6RG7YG5JWNJ  all  --  anywhere             anywhere             /* monitoring/fluent-bit:http -> 100.104.7.89:2020 */
+
+```
+
+:::info
+The rules implement a two-stage NAT pipeline: first, kube-proxy matches the ClusterIP and selects a backend Pod using probabilistic load balancing via KUBE-SVC and KUBE-SEP chains. Then, DNAT rewrites the destination IP to the selected Pod. In parallel, KUBE-MARK-MASQ marks traffic originating outside the cluster CIDR for SNAT, ensuring symmetric return paths via MASQUERADE in POSTROUTING.
+:::
+
+
+```
+How to Read iptables ? 
+1. KUBE-SVC → 入口（匹配谁）
+2. KUBE-SEP → 转发到谁
+3. KUBE-MARK-MASQ → 是否 SNAT
+```
+
+
+#### How Client Source IP plays a role while decommissioning a Core Service running in enterprise infrastructure ?
 Preserving the client source IP a critical aspect when decommissioning a service running on a traditional VM. The decommissioning process is typically carried out in several phases:
 1. Notify stakeholders in advance and request them to stop using the service
 2. Monitor incoming traffic to the service
@@ -47,7 +124,9 @@ Those approaches are most reliable, as long as the source IP remains unmodified 
 While preserving source IP via `externalTrafficPolicy: Local`, please be aware of [Caveats and Limitations](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#caveats-and-limitations-when-preserving-source-ips)
 :::
 
-
+Reference:
+- [How to Get a Client’s “Real” IP Address with Envoy Gateway](https://tetrate.io/blog/client-source-ip-in-kubernetes-ingress)
+- 
 
 ![Kubernetes ExternalTrafficPolicy preserves source IP](https://kubernetes.io/images/docs/sourceip-externaltrafficpolicy.svg)
 

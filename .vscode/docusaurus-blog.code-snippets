@@ -1,0 +1,33 @@
+{
+  "Docusaurus blog post (imports + PostEngagement)": {
+    "scope": "markdown,mdx",
+    "prefix": "ds-blog",
+    "body": [
+      "---",
+      "slug: ${1:my-post-slug}",
+      "title: ${2:Post title}",
+      "authors:",
+      "  name: Bryan Chen",
+      "  title: Innovation junkie. Linux & Kubernetes obsessed",
+      "  url: https://github.com/BryanPersonal",
+      "  image_url: https://github.com/BryanPersonal.png",
+      "tags: [${3}]",
+      "---",
+      "",
+      "import TrackLink from '@site/src/components/TrackLink';",
+      "import PostEngagement from '@site/src/components/PostEngagement';",
+      "",
+      "${4:Intro for the listing page.}",
+      "",
+      "{/* truncate */}",
+      "",
+      "## ${5:Section}",
+      "",
+      "${6:Content.}",
+      "",
+      "<PostEngagement postId=\"${1}\" postTitle=\"${2}\" enableComments />",
+      ""
+    ],
+    "description": "Front matter, TrackLink/PostEngagement imports, truncate, and PostEngagement footer"
+  }
+}
