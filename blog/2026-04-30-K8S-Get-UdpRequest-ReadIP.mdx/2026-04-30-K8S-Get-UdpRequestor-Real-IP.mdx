@@ -29,7 +29,7 @@ In a typical Kubernetes cluster using Calico CNI and kube-proxy (iptables mode),
 > Now it's time to figure out PREROUTING and POSTROUTING in iptables. 😊
 
 An flow example:
-> UDP Traffic: CLinet -> LB - > Node(IP:NodePort) -> kube-proxy -> Pod (Calico CNI)
+> UDP Traffic: `CLinet -> LB -> Node(IP:NodePort) -> kube-proxy -> Pod (Calico CNI)`
 
 In this setup, all incoming packets traverse **cali-PREROUTING** first for Calico's pre-processing, then continue to **KUBE-SERVICES** where kube-proxy performs service matching and DNAT. Equal counters indicate no early packet drops or bypass before kube-proxy.
 ```
@@ -52,6 +52,11 @@ Chain PREROUTING (policy ACCEPT 43084 packets, 2586K bytes)
 ```
 
 #### Take fluent-bit service as an example
+:::warning
+The described procedure is kube-proxy(iptables mode)'s standard service routing chain. To be clear, __this chain has no direct relationship with Calico CNI__. 
+
+Calico is responsible for Pods' routing、IPAM and network policy. While Service's NAT forwarding is independently implemented by kube-proxy.(unless you open Calico eBPF mode, then it will be bypassing those iptables chains)
+:::
 ```
 >>> Overall Kube-proxy builds the chain for NATing the traffic to the backend Pods.
 KUBE-SERVICES
@@ -95,7 +100,20 @@ KUBE-SEP-OGFQV6RG7YG5JWNJ  all  --  anywhere             anywhere             /*
 The rules implement a two-stage NAT pipeline: first, kube-proxy matches the ClusterIP and selects a backend Pod using probabilistic load balancing via KUBE-SVC and KUBE-SEP chains. Then, DNAT rewrites the destination IP to the selected Pod. In parallel, KUBE-MARK-MASQ marks traffic originating outside the cluster CIDR for SNAT, ensuring symmetric return paths via MASQUERADE in POSTROUTING.
 :::
 
+#### Symmetric route VS Asymmetric route
 
+Openstack LB is designed to provide symmetric routing for UDP traffic therefore disabling SNAT from listener will break UDP forwarding.
+
+DSR = Asymmetric route
+
+iptables kube-proxy is implemented by Calico. Using Cilium eBPF or hostNetwork is an optimal solution but it is not an easy implementation, in terms of the efforts of modifying CNI from Gardener Shoot Clusters.
+
+iptables kube-proxy offerred by Calico CNI is designed to provide symmetric routing for UDP traffic therefore disabling SNAT from listener will break UDP forwarding.
+
+
+__一句话总结（核心）__
+
+👉 DSR（Direct Server Return）的本质就是 asymmetric routing：请求经过 LoadBalancer，但响应直接从后端服务器返回客户端，不再经过 LB；UDP 因为是无连接协议，非常适合高性能 DSR，但也正因为缺少连接状态，Linux conntrack、kube-proxy、OpenStack NAT、rp_filter 等组件更容易因为“请求路径”和“响应路径”不一致而出现 SNAT、丢包或转发异常。
 ```
 How to Read iptables ? 
 1. KUBE-SVC → 入口（匹配谁）
@@ -103,6 +121,136 @@ How to Read iptables ?
 3. KUBE-MARK-MASQ → 是否 SNAT
 ```
 
+### Overview of the three traffic models
+
+1. kube-proxy default (Cluster + MASQUERADE)
+2. externalTrafficPolicy: Local
+3. DSR (Direct Server Return)
+
+#### Model one: kube-proxy（Cluster + MASQUERADE）
+
+```text
+Client (1.2.3.4)
+   ↓
+Node A (NodePort)
+   ↓
+kube-proxy（可能跨节点）
+   ↓
+Pod（在 Node B）
+   ↓
+Node B
+   ↓ SNAT（MASQUERADE）
+源IP变成 Node A
+   ↓
+Node A
+   ↓
+Client
+
+Alternatively:
+外部/其他Pod 请求 Service IP:Port
+        ↓
+PREROUTING (nat) → KUBE-SERVICES（匹配 Service）
+        ↓
+KUBE-SVC-XXXX（按 ServicePort 分组，做负载均衡分发）
+        ↓
+KUBE-SEP-XXXX（对应具体 Pod/Endpoint）
+   ├─ KUBE-MARK-MASQ（打上 SNAT 标记）
+   └─ DNAT → 重写目的地址为 PodIP:TargetPort
+        ↓
+路由决策（此时 dst 已是 PodIP，交由 Calico 路由到对应 veth）
+        ↓
+POSTROUTING (nat) → 检查到 MARK → MASQUERADE/SNAT（重写源地址为 NodeIP）
+        ↓
+数据包到达目标 Pod
+```
+
+| 项目        | 行为   |
+| --------- | ---- |
+| client IP | ❌ 丢失 |
+| 路径        | ✅ 对称 |
+| 跨节点       | ✅ 支持 |
+| SNAT      | ✅ 必须 |
+| conntrack | ✅ 依赖 |
+
+> 👉用 SNAT 强行保证“回包必须走入口节点”
+> 通用服务
+> HTTP / TCP
+> 不关心真实 client IP
+
+#### Model two: externalTrafficPolicy=Local
+
+```text
+Client
+   ↓
+Node A（必须有 Pod）
+   ↓
+Pod（本节点）
+   ↓
+Node A
+   ↓
+Client
+```
+
+| 项目        | 行为    |
+| --------- | ----- |
+| client IP | ✅ 保留  |
+| 路径        | ✅ 对称  |
+| 跨节点       | ❌ 不允许 |
+| SNAT      | ❌ 不需要 |
+| conntrack | ✅ 仍使用 |
+
+> 👉 通过“只用本地 Pod”避免跨节点问题
+>
+> Drawback: 如果 Node 上没有 Pod → 请求直接丢弃 ❌
+
+#### Model three: DSR (Direct Server Return)
+
+```text
+Client (1.2.3.4)
+   ↓
+LoadBalancer（不 SNAT）
+   ↓
+Node（VIP / NodePort）
+   ↓
+Pod
+   ↓
+直接返回 Client ❗（绕过 LB）
+```
+
+| 项目        | 行为              |
+| --------- | --------------- |
+| client IP | ✅ 保留            |
+| 路径        | ❌ 非对称           |
+| 跨节点       | ✅ 支持            |
+| SNAT      | ❌ 不使用           |
+| conntrack | ❌ 通常关闭（NOTRACK） |
+
+> 👉 请求走 LB，响应直接回客户端
+
+**优点**
+- 🚀 性能最高（回包不经过 LB）
+- ✅ 保留真实 IP
+- ✅ 适合超高 QPS（DNS）
+
+**🔹 缺点**
+- 配置复杂（VIP / ARP / 路由）
+- 调试困难
+   - Scrape node (ens33 alone) udp request package `tcpdump -i ens33 udp port 53 -vv`
+   - Scrape all NICs (lo, vNIC, bridge) `tcpdump -ni any -vvv -s0 udp port 53`
+      - explicitly add `-s0` is more rigorous engineering practices.
+      -vv：will analyze DNS header flag bit（QR、Opcode、AA、TC、RD、RA 等）
+- 对网络要求高
+
+#### 三种对比
+
+|           | kube-proxy | Local  | DSR     |
+| --------- | ---------- | ------ | ------- |
+| 路径        | 对称         | 对称     | 非对称     |
+| client IP | 丢失         | 保留     | 保留      |
+| SNAT      | 必须         | 不需要    | 不使用     |
+| 跨节点       | 支持         | 不支持    | 支持      |
+| 性能        | 中等         | 较高     | 最高 🚀   |
+| 复杂度       | 低          | 中      | 高       |
 
 #### How Client Source IP plays a role while decommissioning a Core Service running in enterprise infrastructure ?
 Preserving the client source IP a critical aspect when decommissioning a service running on a traditional VM. The decommissioning process is typically carried out in several phases:

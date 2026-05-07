@@ -137,3 +137,75 @@ sudo dracut -f
 
 ```
 
+Temp change the boot option
+
+```
+# First modify /etc/default/grub
+GRUB_DEFAULT="Advanced options for SLES 15-SP7>SLES 15-SP7, with Linux 6.4.0-150700.53.31-default"
+
+#  grub2-mkconfig -o /boot/grub2/grub.cfg
+Generating grub configuration file ...
+Found linux image: /boot/vmlinuz-6.4.0-150700.53.34-default
+Found initrd image: /boot/initrd-6.4.0-150700.53.34-default
+Found linux image: /boot/vmlinuz-6.4.0-150700.53.31-default
+Found initrd image: /boot/initrd-6.4.0-150700.53.31-default
+Warning: os-prober will not be executed to detect other bootable partitions.
+Systems on them will not be added to the GRUB boot configuration.
+Check GRUB_DISABLE_OS_PROBER documentation entry.
+Adding boot menu entry for UEFI Firmware Settings ...
+done
+
+- Or alternatively one shot set  grub2-reboot "Advanced options for SLES 15-SP7>SLES 15-SP7, with Linux 6.4.0-150700.53.31-default"
+原理：向 /boot/grub2/grubenv（一个固定位置的 1KB 环境块文件）写入 next_entry=xxx。GRUB 启动时优先读取 next_entry，启动成功后自动将其清除，下次启动回退到 saved_entry 或 GRUB_DEFAULT。
+优势：专为“安全测试”设计。即使新内核 panic 或无法挂载根文件系统，硬重启后依然会回到老内核
+
+Find the following snippets from /boot/grub2/grub.cfg 
+
+if [ "${next_entry}" ] ; then
+   set default="${next_entry}"
+   set next_entry=
+   save_env next_entry
+   if [ "${env_block}" ] ; then
+     save_env -f "${env_block}" next_entry
+   fi
+   set boot_once=true
+else
+   set default="SLES_SAP 15-SP7"
+fi
+
+
+
+- grub2-set-default "Advanced options for SLES 15-SP7>SLES 15-SP7, with Linux 6.4.0-150700.53.31-default"
+原理：修改 grubenv 中的 saved_entry。GRUB 启动时若 next_entry 为空，则使用 saved_entry。
+与 grub2-mkconfig 的区别：无需重新生成 grub.cfg，修改即时生效（下次重启），且可通过 grub2-editenv list 随时查看当前持久化默认值。
+
+Find the following snippets from /boot/grub2/grub.cfg 
+
+if [ "${prev_saved_entry}" ]; then
+  set saved_entry="${prev_saved_entry}"
+  save_env saved_entry
+  set prev_saved_entry=
+  save_env prev_saved_entry
+  set boot_once=true
+fi
+
+function savedefault {
+  if [ -z "${boot_once}" ]; then
+    saved_entry="${chosen}"
+    if [ "${env_block}" ] ; then
+      save_env -f "${env_block}" saved_entry
+    else
+      save_env saved_entry
+    fi
+
+  fi
+}
+
+MISC Commands:
+- grub2-reboot
+- grub2-set-default
+- grub2-editenv
+- grub2-probe
+- grub2-mount
+
+```
